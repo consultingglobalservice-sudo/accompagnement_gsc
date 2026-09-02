@@ -1,0 +1,2595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSC Business Center — Plateforme d'accompagnement</title>
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" defer></script>
+<style>
+  :root{
+    --navy:#132540;
+    --navy-dark:#0b1728;
+    --navy-mid:#1e3a5f;
+    --gold:#c9a24b;
+    --gold-light:#f2e7cc;
+    --cream:#f7f5f0;
+    --white:#ffffff;
+    --grey:#6b7280;
+    --grey-light:#e5e7eb;
+    --green:#3f7d5c;
+    --amber:#b8823a;
+    --red:#b8483f;
+    --radius:10px;
+    --shadow:0 1px 3px rgba(11,23,40,0.08), 0 1px 2px rgba(11,23,40,0.06);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--cream);
+    color:#20293a;
+    -webkit-font-smoothing:antialiased;
+  }
+  header.app{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-dark) 100%);
+    color:var(--white);
+    padding:18px 20px 14px;
+  }
+  header.app .brand{display:flex;align-items:center;gap:10px;}
+  header.app .brand .mark{
+    width:34px;height:34px;border-radius:8px;
+    background:var(--gold);color:var(--navy-dark);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:15px;letter-spacing:-0.5px;
+  }
+  header.app .brand h1{font-size:16px;margin:0;font-weight:700;letter-spacing:0.2px;}
+  header.app .brand p{margin:1px 0 0;font-size:11.5px;color:var(--gold-light);opacity:0.85;}
+
+  nav.tabs{
+    display:flex;overflow-x:auto;gap:2px;
+    background:var(--navy-dark);
+    padding:0 8px;
+    -webkit-overflow-scrolling:touch;
+  }
+  nav.tabs button{
+    flex:0 0 auto;
+    background:transparent;border:none;color:#9fb0c7;
+    padding:12px 14px;font-size:13px;font-weight:600;
+    cursor:pointer;white-space:nowrap;
+    border-bottom:3px solid transparent;
+  }
+  nav.tabs button.active{color:var(--white);border-bottom-color:var(--gold);}
+
+  main{padding:16px;max-width:980px;margin:0 auto;padding-bottom:60px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
+  @media(min-width:640px){.kpi-grid{grid-template-columns:repeat(4,1fr);}}
+  .kpi-card{
+    background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);
+    border-left:3px solid var(--gold);
+  }
+  .kpi-card .val{font-size:22px;font-weight:800;color:var(--navy);}
+  .kpi-card .lbl{font-size:11.5px;color:var(--grey);margin-top:2px;}
+
+  .card{background:var(--white);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:14px;}
+  .card h2{font-size:14px;margin:0 0 12px;color:var(--navy);font-weight:700;}
+  .card h3{font-size:13px;margin:16px 0 8px;color:var(--navy);font-weight:700;}
+
+  .mode-split{display:flex;flex-direction:column;gap:8px;}
+  .mode-row{display:flex;align-items:center;gap:10px;font-size:12.5px;}
+  .mode-row .label{width:78px;flex:0 0 78px;color:var(--grey);font-weight:600;}
+  .mode-row .bar-track{flex:1;height:10px;background:var(--grey-light);border-radius:6px;overflow:hidden;}
+  .mode-row .bar-fill{height:100%;border-radius:6px;}
+  .mode-row .count{width:24px;text-align:right;font-weight:700;color:var(--navy);}
+  .fill-presentiel{background:var(--navy-mid);}
+  .fill-distance{background:var(--gold);}
+  .fill-hybride{background:var(--green);}
+
+  .badge{
+    display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;
+    text-transform:uppercase;letter-spacing:0.3px;
+  }
+  .badge-presentiel{background:#e4ebf3;color:var(--navy-mid);}
+  .badge-distance{background:var(--gold-light);color:#7a5f22;}
+  .badge-hybride{background:#e3efe8;color:var(--green);}
+
+  form .field{margin-bottom:12px;}
+  form label{display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px;}
+  form input, form select, form textarea{
+    width:100%;padding:9px 10px;border:1px solid var(--grey-light);border-radius:8px;
+    font-size:13px;font-family:inherit;background:var(--white);color:#20293a;
+  }
+  form textarea{min-height:60px;resize:vertical;}
+  .mode-toggle{display:flex;gap:6px;}
+  .mode-toggle button{
+    flex:1;padding:10px 6px;border:1px solid var(--grey-light);background:var(--white);
+    border-radius:8px;font-size:12px;font-weight:600;color:var(--grey);cursor:pointer;
+  }
+  .mode-toggle button.sel{border-color:var(--navy);background:var(--navy);color:var(--white);}
+
+  .note-scale{display:flex;gap:6px;}
+  .note-scale button{
+    flex:1;padding:10px 0;border:1px solid var(--grey-light);background:var(--white);
+    border-radius:8px;font-size:14px;font-weight:700;color:var(--grey);cursor:pointer;
+  }
+  .note-scale button.sel{background:var(--gold);border-color:var(--gold);color:var(--navy-dark);}
+  .note-scale-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--grey);margin-top:4px;}
+
+  .satisfaction-locked{
+    text-align:center;color:var(--grey);font-size:12.5px;padding:20px 10px;
+  }
+  .satisfaction-locked .lock-icon{font-size:24px;display:block;margin-bottom:8px;}
+  .satisfaction-done{
+    background:var(--cream);border-radius:10px;padding:16px;
+  }
+  .satisfaction-done .stars{color:var(--gold);font-size:16px;margin:4px 0 10px;}
+  .satisfaction-done blockquote{
+    font-style:italic;color:#20293a;font-size:13px;line-height:1.5;margin:0 0 10px;
+    border-left:3px solid var(--gold);padding-left:12px;
+  }
+  .auth-badge{
+    display:inline-block;font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:12px;
+    text-transform:uppercase;
+  }
+  .auth-yes{background:#e3efe8;color:var(--green);}
+  .auth-no{background:#f7e2e0;color:var(--red);}
+  .temoignage-admin-card{background:var(--cream);border-radius:10px;padding:16px;margin-bottom:12px;}
+  .temoignage-admin-actions{display:flex;gap:8px;margin-top:10px;}
+  .temoignage-admin-actions button{
+    flex:1;border:none;border-radius:8px;padding:9px;font-family:'Space Grotesk',monospace;
+    font-weight:600;font-size:12px;cursor:pointer;
+  }
+  .temoignage-approve-btn{background:var(--green);color:#fff;}
+  .temoignage-reject-btn{background:#f2f2f2;color:var(--red);}
+  .temoignage-status-badge{
+    display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;
+    text-transform:uppercase;margin-left:8px;
+  }
+  .temoignage-status-approuve{background:#e3efe8;color:var(--green);}
+  .temoignage-status-rejete{background:#f7e2e0;color:var(--red);}
+  .temoignage-status-en_attente{background:#fdf0d5;color:#8A6D3B;}
+
+  .btn{
+    display:inline-block;background:var(--navy);color:var(--white);border:none;
+    padding:11px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;width:100%;
+  }
+  .btn:active{opacity:0.85;}
+  .btn-outline{background:var(--white);color:var(--navy);border:1px solid var(--navy);}
+
+  .session-item{
+    display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--grey-light);
+  }
+  .session-item:last-child{border-bottom:none;}
+  .session-date{flex:0 0 52px;text-align:center;}
+  .session-date .d{font-size:18px;font-weight:800;color:var(--navy);line-height:1;}
+  .session-date .m{font-size:10px;color:var(--grey);text-transform:uppercase;}
+  .session-info b{display:block;font-size:13px;color:var(--navy);}
+  .session-info span{font-size:11.5px;color:var(--grey);display:block;margin-top:2px;}
+  .session-link{font-size:11.5px;color:var(--navy-mid);font-weight:600;margin-top:4px;display:inline-block;}
+
+  .progress-step{
+    display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--grey-light);
+  }
+  .progress-step:last-child{border-bottom:none;}
+  .progress-step .dot{
+    flex:0 0 26px;width:26px;height:26px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;
+    background:var(--grey-light);color:var(--grey);
+  }
+  .progress-step.done .dot{background:var(--green);color:var(--white);}
+  .progress-step.current .dot{background:var(--gold);color:var(--navy-dark);}
+  .progress-step .content{flex:1;}
+  .progress-step .content b{font-size:13px;color:var(--navy);}
+  .progress-step .status{font-size:10.5px;font-weight:700;text-transform:uppercase;margin-left:6px;}
+  .status-done{color:var(--green);}
+  .status-current{color:#8a6d1f;}
+  .status-todo{color:var(--grey);}
+  .livrable-row{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--cream);border-radius:8px;padding:8px 10px;margin-top:6px;font-size:12px;
+  }
+  .livrable-row a{color:var(--navy-mid);font-weight:700;text-decoration:none;}
+  .livrable-row .dl-btn{
+    flex:0 0 auto;background:var(--navy);color:var(--white);font-size:11px;font-weight:700;
+    padding:6px 12px;border-radius:16px;text-decoration:none;white-space:nowrap;
+  }
+  .livrable-row .who{font-size:10px;color:var(--grey);}
+  .livrable-row-wrap{margin-top:6px;}
+  .livrable-row-wrap .livrable-row{margin-top:0;border-radius:8px 8px 0 0;}
+  .livrable-row .lvRenameInput{
+    font-size:12px;padding:4px 6px;border:1px solid var(--grey-light);border-radius:6px;width:100%;
+  }
+  .livrable-actions{
+    display:flex;gap:6px;flex-wrap:wrap;background:var(--white);border:1px solid var(--grey-light);
+    border-top:none;border-radius:0 0 8px 8px;padding:6px 8px;
+  }
+  .livrable-actions .btn-small{
+    padding:5px 9px;font-size:10.5px;cursor:pointer;
+  }
+  label.btn-small{display:inline-flex;align-items:center;}
+  .file-input-wrap{
+    border:1.5px dashed var(--grey-light);border-radius:8px;padding:14px;text-align:center;
+    font-size:12px;color:var(--grey);cursor:pointer;background:var(--white);
+  }
+  .file-input-wrap.has-file{border-color:var(--gold);color:var(--navy);font-weight:600;}
+
+  .empty{text-align:center;color:var(--grey);font-size:12.5px;padding:20px 0;}
+
+  /* ===== Connexion / rôles ===== */
+  #loginScreen{
+    position:fixed;inset:0;z-index:100;
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-dark) 100%);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .login-box{
+    background:var(--white);border-radius:14px;padding:26px 22px;max-width:380px;width:100%;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  }
+  .login-box .mark{
+    width:46px;height:46px;border-radius:10px;background:var(--gold);color:var(--navy-dark);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;margin:0 auto 12px;
+  }
+  .login-box h2{text-align:center;font-size:16px;color:var(--navy);margin:0 0 4px;}
+  .login-box p.sub{text-align:center;font-size:11.5px;color:var(--grey);margin:0 0 18px;}
+  .role-toggle{display:flex;gap:6px;margin-bottom:16px;}
+  .role-toggle button{
+    flex:1;padding:10px 4px;border:1px solid var(--grey-light);background:var(--white);
+    border-radius:8px;font-size:12px;font-weight:700;color:var(--grey);cursor:pointer;
+  }
+  .role-toggle button.sel{background:var(--navy);color:var(--white);border-color:var(--navy);}
+  .login-error{color:var(--red);font-size:11.5px;margin-top:8px;text-align:center;display:none;}
+  .login-hint{
+    background:var(--cream);border-radius:8px;padding:9px 11px;font-size:10.5px;color:var(--grey);
+    margin-top:14px;line-height:1.5;
+  }
+
+  .user-bar{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+  .user-bar .who{font-size:11px;color:var(--gold-light);}
+  .user-bar .who b{color:var(--white);}
+  .role-badge{
+    font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.4px;
+    background:rgba(201,162,75,0.2);color:var(--gold);padding:2px 7px;border-radius:8px;margin-left:6px;
+  }
+  .logout-btn{
+    background:transparent;border:1px solid rgba(255,255,255,0.25);color:var(--white);
+    font-size:11px;padding:5px 10px;border-radius:16px;cursor:pointer;
+  }
+
+  .team-row{
+    padding:12px 0;border-bottom:1px solid var(--grey-light);
+  }
+  .team-row:last-child{border-bottom:none;}
+  .team-row .top{display:flex;justify-content:space-between;align-items:center;}
+  .team-row b{font-size:13.5px;color:var(--navy);}
+  .team-row .count{font-size:11px;color:var(--grey);}
+  .team-row .actions{display:flex;gap:6px;margin-top:8px;}
+  .team-row .actions input{
+    flex:1;padding:7px 9px;border:1px solid var(--grey-light);border-radius:7px;font-size:12px;
+  }
+  .btn-small{
+    padding:7px 12px;border-radius:7px;font-size:11.5px;font-weight:700;cursor:pointer;border:1px solid var(--navy);
+    background:var(--white);color:var(--navy);white-space:nowrap;
+  }
+  .btn-small.danger{border-color:var(--red);color:var(--red);}
+
+  .my-stats{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+  .my-stats .stat{
+    flex:1;min-width:100px;background:var(--cream);border-radius:8px;padding:10px 12px;
+  }
+  .my-stats .stat .n{font-size:18px;font-weight:800;color:var(--navy);}
+  .my-stats .stat .l{font-size:10.5px;color:var(--grey);}
+
+  .evo-block{border-bottom:1px solid var(--grey-light);padding:14px 0;}
+  .evo-block:last-child{border-bottom:none;}
+  .evo-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+  .evo-head b{font-size:13.5px;color:var(--navy);}
+  .evo-head .chev{font-size:11px;color:var(--grey);transition:transform .2s;}
+  .evo-head.open .chev{transform:rotate(90deg);}
+  .evo-kpis{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .evo-kpis .k{
+    flex:1;min-width:88px;background:var(--cream);border-radius:8px;padding:8px 10px;text-align:center;
+  }
+  .evo-kpis .k .n{font-size:15px;font-weight:800;color:var(--navy);}
+  .evo-kpis .k .l{font-size:9.5px;color:var(--grey);text-transform:uppercase;}
+  .evo-detail{display:none;margin-top:12px;}
+  .evo-detail.open{display:block;}
+  .evo-client-row{
+    display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--grey-light);
+  }
+  .evo-client-row:last-child{border-bottom:none;}
+  .evo-client-row .name{flex:0 0 auto;min-width:110px;font-size:12px;font-weight:700;color:var(--navy);}
+  .evo-client-row .bar-track{flex:1;height:8px;background:var(--grey-light);border-radius:5px;overflow:hidden;}
+  .evo-client-row .bar-fill{height:100%;background:var(--gold);border-radius:5px;}
+  .evo-client-row .step-lbl{flex:0 0 46px;font-size:10.5px;color:var(--grey);text-align:right;}
+  .evo-alert{color:var(--red);font-size:10px;font-weight:700;margin-left:4px;}
+
+  .account-badge{
+    font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:10px;text-transform:uppercase;
+  }
+  .account-active{background:#e3efe8;color:var(--green);}
+  .account-none{background:#f7e2e0;color:var(--red);}
+  .team-row select.clientConsultant{
+    width:100%;padding:7px 9px;border:1px solid var(--grey-light);border-radius:7px;font-size:12px;
+    margin-top:6px;background:var(--white);color:#20293a;
+  }
+  .edit-panel{
+    margin-top:12px;padding:12px;background:var(--cream);border-radius:8px;
+  }
+  .edit-panel .field{margin-bottom:10px;}
+  .edit-panel .field:last-of-type{margin-bottom:12px;}
+
+  .subtabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+  .subtabs button{
+    padding:9px 14px;border:1px solid var(--grey-light);background:var(--white);
+    border-radius:20px;font-size:12px;font-weight:700;color:var(--grey);cursor:pointer;
+  }
+  .subtabs button.sub-active{background:var(--navy);color:var(--white);border-color:var(--navy);}
+  .subview{display:none;}
+  .subview.sub-active{display:block;}
+  .note{
+    background:var(--gold-light);border-radius:8px;padding:10px 12px;font-size:11.5px;
+    color:#6b5423;margin-top:10px;line-height:1.4;
+  }
+  .toast{
+    position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+    background:var(--navy-dark);color:var(--white);padding:10px 18px;border-radius:20px;
+    font-size:12.5px;box-shadow:var(--shadow);opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;
+  }
+  .toast.show{opacity:1;}
+
+  .save-banner{
+    display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    background:#f7e2e0;color:#8A3A2E;padding:10px 16px;font-size:12.5px;font-weight:600;
+    border-bottom:2px solid #d99a92;
+  }
+  .save-banner.show{display:flex;}
+  .save-banner button{
+    background:#8A3A2E;color:var(--white);border:none;padding:7px 14px;border-radius:16px;
+    font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;
+  }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="mark">GSC</div>
+    <h2>Plateforme d'accompagnement</h2>
+    <p class="sub">Connexion à votre espace</p>
+
+    <div class="role-toggle" id="roleToggle">
+      <button type="button" data-role="admin" class="sel">Admin</button>
+      <button type="button" data-role="consultant">Consultant</button>
+      <button type="button" data-role="client">Client</button>
+    </div>
+
+    <form id="loginForm">
+      <div class="field" id="loginNameField" style="display:none;">
+        <label id="loginNameLabel">Nom</label>
+        <input type="text" id="loginName" placeholder="Votre nom" autocomplete="off">
+      </div>
+      <div class="field">
+        <label id="loginCodeLabel">Code d'accès</label>
+        <input type="password" id="loginCode" placeholder="Code d'accès" autocomplete="off">
+      </div>
+      <button type="submit" class="btn">Se connecter</button>
+      <div class="login-error" id="loginError">Code d'accès incorrect.</div>
+    </form>
+
+    <div class="login-hint" id="loginHint"></div>
+  </div>
+</div>
+
+<header class="app">
+  <div class="brand">
+    <div class="mark">GSC</div>
+    <div>
+      <h1>GSC Business Center</h1>
+      <p>Plateforme d'accompagnement — méthode en 10 étapes</p>
+    </div>
+  </div>
+  <div class="user-bar">
+    <div class="who" id="userBar"></div>
+    <button class="logout-btn" id="logoutBtn">Se déconnecter</button>
+  </div>
+</header>
+
+<div id="saveBanner" class="save-banner">
+  <span>⚠ Certaines modifications n'ont pas pu être enregistrées. Vos données restent affichées, mais ne seront pas conservées si vous fermez la page.</span>
+  <button type="button" id="retrySaveBtn">Réessayer maintenant</button>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-view="dashboard" data-roles="admin" class="active">Tableau de bord</button>
+  <button data-view="sessions" data-roles="admin,consultant,client">Sessions</button>
+  <button data-view="espace" data-roles="admin,consultant,client">Espace client</button>
+  <button data-view="consultants" data-roles="admin">Espace consultant</button>
+</nav>
+
+<main>
+
+  <!-- ===== DASHBOARD ===== -->
+  <section class="view active" id="view-dashboard">
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div class="card">
+      <h2>Répartition des missions par mode d'accompagnement</h2>
+      <div class="mode-split" id="modeSplit"></div>
+    </div>
+    <div class="card">
+      <h2>Prochaines sessions</h2>
+      <div id="dashUpcoming"></div>
+    </div>
+  </section>
+
+  <!-- ===== SESSIONS ===== -->
+  <section class="view" id="view-sessions">
+    <div id="myStatsSessions"></div>
+    <div class="card" id="calendlyCard" style="display:none;">
+      <h2>Réserver un créneau à distance</h2>
+      <p style="font-size:12.5px;color:var(--grey);margin:0 0 14px;">Ouvre votre calendrier de disponibilités réelles : le client choisit son créneau, le lien de visio est généré automatiquement et un rappel lui est envoyé avant la session.</p>
+      <button type="button" class="btn" id="openCalendlyBtn">📅 Ouvrir Calendly</button>
+    </div>
+    <div class="card">
+      <h2>Enregistrer une session manuellement</h2>
+      <form id="sessionForm">
+        <div class="field">
+          <label>Client</label>
+          <select id="sClient" required></select>
+        </div>
+        <div class="field">
+          <label>Mode d'accompagnement</label>
+          <div class="mode-toggle" id="sModeToggle">
+            <button type="button" data-mode="presentiel">Présentiel</button>
+            <button type="button" data-mode="distance">À distance</button>
+            <button type="button" data-mode="hybride">Hybride</button>
+          </div>
+        </div>
+        <div class="field" id="sLieuField">
+          <label>Lieu du rendez-vous</label>
+          <input type="text" id="sLieu" placeholder="Bureau GSC, chez le client, CTIC Dakar...">
+        </div>
+        <div class="field" id="sLienField" style="display:none;">
+          <label>Lien de visioconférence</label>
+          <input type="text" id="sLien" placeholder="https://meet.google.com/...">
+        </div>
+        <div class="field">
+          <label>Étape GSC concernée</label>
+          <select id="sEtape"></select>
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="sDate" required>
+        </div>
+        <div class="field">
+          <label>Heure</label>
+          <input type="time" id="sHeure">
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button type="submit" class="btn" id="sSubmitBtn">Planifier la session</button>
+          <button type="button" class="btn btn-outline" id="sCancelEditBtn" style="display:none;">Annuler la modification</button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Sessions à venir</h2>
+      <div id="sessionList"></div>
+    </div>
+  </section>
+
+  <!-- ===== ESPACE CLIENT (fusion suivi + comptes) ===== -->
+  <section class="view" id="view-espace">
+    <div class="subtabs" id="espaceSubtabs">
+      <button data-subview="suivi" class="sub-active">Suivi client &amp; livrables</button>
+      <button data-subview="comptes" data-roles="admin">Créer un compte client</button>
+      <button data-subview="temoignages" data-roles="admin">Témoignages à valider</button>
+    </div>
+
+    <div class="subview sub-active" id="sub-suivi">
+      <div class="card">
+        <h2>Espace client — suivi &amp; livrables</h2>
+        <div class="field">
+          <label>Client</label>
+          <select id="eClient"></select>
+        </div>
+        <div id="eProgress"></div>
+      </div>
+      <div class="card" id="satisfactionCard" style="display:none;">
+        <h2>Questionnaire de satisfaction</h2>
+        <div id="satisfactionContent"></div>
+      </div>
+      <div class="card">
+        <h2>Déposer un livrable</h2>
+        <form id="livrableForm">
+          <div class="field">
+            <label>Étape concernée</label>
+            <select id="lEtape"></select>
+          </div>
+          <div class="field">
+            <label>Déposé par</label>
+            <div class="mode-toggle" id="lWhoToggle">
+              <button type="button" data-who="consultant" class="sel">Le consultant</button>
+              <button type="button" data-who="client">Le client</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Fichier</label>
+            <label class="file-input-wrap" id="lFileLabel">
+              Toucher pour choisir un fichier (PDF, image, document…)
+              <input type="file" id="lFile" style="display:none;">
+            </label>
+          </div>
+          <button type="submit" class="btn">Déposer le livrable</button>
+        </form>
+        <div class="note">Tout livrable déposé ici (par le consultant ou par le client) apparaît immédiatement dans l'Espace client correspondant, avec un bouton de téléchargement. En aperçu, les fichiers sont stockés dans cette session Claude (limite ~4 Mo/fichier) ; en production, ce dépôt doit pointer vers Google Drive via le backend Apps Script pour un stockage durable et partagé avec l'équipe.</div>
+      </div>
+    </div>
+
+    <div class="subview" id="sub-comptes">
+      <div class="card">
+        <h2>Créer un compte client</h2>
+        <form id="clientCreateForm">
+          <div class="field">
+            <label>Nom du client</label>
+            <input type="text" id="ccNom" placeholder="Prénom et nom" required>
+          </div>
+          <div class="field">
+            <label>Entreprise</label>
+            <input type="text" id="ccEntreprise" placeholder="Nom de l'entreprise" required>
+          </div>
+          <div class="field">
+            <label>Secteur</label>
+            <input type="text" id="ccSecteur" placeholder="Secteur d'activité">
+          </div>
+          <div class="field">
+            <label>Téléphone (WhatsApp)</label>
+            <input type="tel" id="ccTelephone" placeholder="+221 77 000 00 00">
+          </div>
+          <div class="field">
+            <label>Mode d'accompagnement</label>
+            <div class="mode-toggle" id="ccModeToggle">
+              <button type="button" data-mode="presentiel" class="sel">Présentiel</button>
+              <button type="button" data-mode="distance">À distance</button>
+              <button type="button" data-mode="hybride">Hybride</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Consultant assigné</label>
+            <select id="ccConsultant"></select>
+          </div>
+          <div class="field">
+            <label>Mot de passe</label>
+            <input type="password" id="ccPass" placeholder="Défini par l'administrateur" required minlength="4">
+          </div>
+          <div class="field">
+            <label>Confirmer le mot de passe</label>
+            <input type="password" id="ccPass2" placeholder="Ressaisir le mot de passe" required minlength="4">
+          </div>
+          <button type="submit" class="btn">Créer le compte</button>
+          <div class="login-error" id="clientCreateError" style="display:none;">Les mots de passe ne correspondent pas.</div>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Comptes clients</h2>
+        <div id="clientAccountsList"></div>
+        <div class="note">Pour chaque client, créez un mot de passe personnel et assignez-lui un consultant. Le client ne peut se connecter à son Espace client qu'une fois son compte créé.</div>
+      </div>
+    </div>
+
+    <div class="subview" id="sub-temoignages">
+      <div class="card">
+        <h2>Témoignages à valider</h2>
+        <div class="note">Ces témoignages proviennent du questionnaire de satisfaction (étape 10/10), lorsque le client a autorisé la publication. Approuvez-les pour qu'ils apparaissent automatiquement sur la page de vente (section « Témoignages »).</div>
+        <div id="temoignagesAdminList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONSULTANT (ADMIN) ===== -->
+  <section class="view" id="view-consultants">
+    <div class="card">
+      <h2>Mon accès administrateur</h2>
+      <form id="adminPasswordForm">
+        <div class="field">
+          <label>Mot de passe actuel</label>
+          <input type="password" id="apCurrent" placeholder="Mot de passe actuel" required>
+        </div>
+        <div class="field">
+          <label>Nouveau mot de passe</label>
+          <input type="password" id="apNew" placeholder="Nouveau mot de passe" required minlength="4">
+        </div>
+        <div class="field">
+          <label>Confirmer le nouveau mot de passe</label>
+          <input type="password" id="apNew2" placeholder="Ressaisir le nouveau mot de passe" required minlength="4">
+        </div>
+        <button type="submit" class="btn">Modifier mon mot de passe</button>
+        <div class="login-error" id="adminPasswordError" style="display:none;"></div>
+      </form>
+      <div class="note">Ce mot de passe est celui utilisé pour se connecter à l'espace administrateur. Changez-le dès que possible en production, il est défini sur une valeur de démonstration par défaut.</div>
+    </div>
+    <div class="card">
+      <h2>Créer un compte consultant</h2>
+      <form id="teamForm">
+        <div class="field">
+          <label>Nom du consultant</label>
+          <input type="text" id="tNom" placeholder="Prénom et nom" required>
+        </div>
+        <div class="field">
+          <label>Téléphone (WhatsApp)</label>
+          <input type="tel" id="tTelephone" placeholder="+221 77 000 00 00">
+        </div>
+        <div class="field">
+          <label>Lien Calendly personnel (optionnel)</label>
+          <input type="url" id="tCalendly" placeholder="https://calendly.com/votre-nom">
+        </div>
+        <div class="field">
+          <label>Mot de passe</label>
+          <input type="password" id="tPass" placeholder="Défini par l'administrateur" required minlength="4">
+        </div>
+        <div class="field">
+          <label>Confirmer le mot de passe</label>
+          <input type="password" id="tPass2" placeholder="Ressaisir le mot de passe" required minlength="4">
+        </div>
+        <button type="submit" class="btn">Créer le compte</button>
+        <div class="login-error" id="teamError" style="display:none;">Les mots de passe ne correspondent pas.</div>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Comptes consultants</h2>
+      <div id="teamList"></div>
+      <div class="note">Seul l'admin peut créer, réinitialiser ou supprimer un compte consultant. Chaque consultant se connecte ensuite avec son propre mot de passe et ne voit que les clients qui lui sont assignés.</div>
+    </div>
+    <div class="card">
+      <h2>Évolution des portefeuilles — suivi &amp; contrôle</h2>
+      <div id="consultantEvolution"></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------------------------------------------------------------
+// Données de référence : les 10 étapes de la méthode GSC
+// ---------------------------------------------------------------
+const ETAPES = [
+  { id:1, nom:"Clarification du projet", prio:"bloquante" },
+  { id:2, nom:"Validation du marché", prio:"bloquante" },
+  { id:3, nom:"Structuration du business", prio:"bloquante" },
+  { id:4, nom:"Positionnement et marque", prio:"importante" },
+  { id:5, nom:"Acquisition client", prio:"bloquante" },
+  { id:6, nom:"Conversion et vente", prio:"bloquante" },
+  { id:7, nom:"Livraison et satisfaction", prio:"importante" },
+  { id:8, nom:"Automatisation et système", prio:"importante" },
+  { id:9, nom:"Développement et croissance", prio:"secondaire" },
+  { id:10, nom:"Impact et liberté", prio:"secondaire" },
+];
+
+const MODE_LABEL = { presentiel:"Présentiel", distance:"À distance", hybride:"Hybride" };
+
+// ---------------------------------------------------------------
+// Comptes de démonstration — accès par rôle
+// ---------------------------------------------------------------
+const DEFAULT_ADMIN_PASSWORD = "GSC-ADMIN";
+
+// ---------------------------------------------------------------
+// Calendly — lien de réservation par défaut du cabinet (utilisé si un
+// consultant n'a pas encore renseigné son propre lien personnel).
+// ⚠️ À REMPLACER par votre vrai lien une fois votre compte Calendly configuré,
+// ex. "https://calendly.com/gsc-business-center/diagnostic"
+// ---------------------------------------------------------------
+const CALENDLY_ORG_URL = "https://calendly.com/consulting-globalservice/30min";
+
+// ---------------------------------------------------------------
+// Lien public de la plateforme, envoyé avec les identifiants de connexion.
+// ⚠️ À REMPLACER par l'URL réelle une fois la plateforme déployée
+// (ex. "https://consultingglobalservice-sudo.github.io/gsc/plateforme.html")
+// ---------------------------------------------------------------
+const PLATFORM_URL = "https://consultingglobalservice-sudo.github.io/accompagnement_gsc/";
+
+// ---------------------------------------------------------------
+// PONT AVEC 02_Plateforme_Prospection_Diagnostic.html — importe
+// automatiquement les clients dont le statut est passé à "Signé / Client"
+// dans le Pipeline commercial.
+// Déployez GSC_Backend_Pont_Clients.gs (voir instructions en haut de ce
+// fichier .gs) puis collez ici la MÊME URL que dans
+// 02_Plateforme_Prospection_Diagnostic.html.
+// ---------------------------------------------------------------
+const CLIENT_BRIDGE_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxc_9QNsMpZg8Qba9PT3VYGyv0oZYcPcf8Vbt4EH3iS9xGiGhDaDwdPt7rsU2IeX6J2/exec";
+
+// ---------------------------------------------------------------
+// PONT AVEC 01_Page_de_vente_GSC.html — envoie les témoignages autorisés
+// (questionnaire de satisfaction, étape 10/10) vers la section
+// "Témoignages" du site public, après validation manuelle.
+// Déployez GSC_Backend_Temoignages.gs (voir instructions en haut de ce
+// fichier .gs) puis collez ici la MÊME URL que dans
+// 01_Page_de_vente_GSC.html.
+// ---------------------------------------------------------------
+const TEMOIGNAGE_BRIDGE_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxVDBL3lH6aYpUL7J5IOGNOcGBCKEiH_WvS-2cDXiBbUg5bAQAoktHddDODPKi22Lii1A/exec";
+
+// ---------------------------------------------------------------
+// BACKEND PARTAGÉ "ESPACE CLIENT" — remplace le stockage 100% local
+// (localStorage) par un vrai serveur commun à tous les appareils : sans
+// ça, ce qu'un admin ajoute sur son ordinateur (livrables, sessions...)
+// reste invisible pour un client connecté depuis son téléphone.
+// Déployez GSC_Backend_EspaceClient.gs (voir instructions en haut de ce
+// fichier .gs) puis collez l'URL obtenue ici. Ce backend n'est utilisé que
+// par ce fichier — pas besoin de le coller ailleurs.
+// ---------------------------------------------------------------
+const ESPACE_CLIENT_BACKEND_URL = "https://script.google.com/macros/s/AKfycbyC-7nFzTtEBbqZ0VRT-XT8VAfttdj3ivZjQEkRrwjNORWotTy8k59uRfMaftpdr47E/exec";
+
+// ---------------------------------------------------------------
+// Stockage : window.storage (aperçu) — voir note de déploiement en bas de fichier
+// ---------------------------------------------------------------
+// Stockage : utilise window.storage dans l'aperçu Claude ; bascule automatiquement
+// sur localStorage si le fichier est ouvert en dehors (navigateur, hébergement GitHub Pages...).
+const hasClaudeStorage = (typeof window !== "undefined" && !!window.storage);
+
+const store = {
+  async get(key, fallback){
+    if(hasClaudeStorage){
+      try{
+        const r = await window.storage.get(key);
+        return r ? JSON.parse(r.value) : fallback;
+      }catch(e){ return fallback; }
+    }
+    try{
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    }catch(e){ return fallback; }
+  },
+  async set(key, value){
+    if(hasClaudeStorage){
+      try{
+        await window.storage.set(key, JSON.stringify(value));
+        return true;
+      }catch(e){
+        console.error("Échec de sauvegarde (window.storage) :", e);
+        return false;
+      }
+    }
+    try{
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    }catch(e){
+      console.error("Échec de sauvegarde (localStorage) :", e);
+      return false;
+    }
+  }
+};
+
+let prospects = [];
+let sessions = [];
+let livrables = [];
+let testimonials = [];
+let consultantAccounts = [];
+let adminPassword = DEFAULT_ADMIN_PASSWORD;
+let currentUser = null; // { role, name, clientId? }
+
+// ---------------------------------------------------------------
+// Synchronisation avec le backend partagé "Espace Client"
+// v2 — granulaire : chaque fonction ne modifie QU'UN SEUL élément côté
+// serveur, jamais l'ensemble des données. C'est ce qui évite qu'un
+// appareil avec des données anciennes en mémoire n'écrase le travail plus
+// récent effectué ailleurs (voir note en tête de GSC_Backend_EspaceClient.gs).
+// ---------------------------------------------------------------
+const espaceClientBackendConfigured = ESPACE_CLIENT_BACKEND_URL.indexOf("REMPLACEZ") === -1;
+const ESPACE_MIGRATION_FLAG_KEY = "gsc_espace_migrated_v1";
+
+async function fetchEspaceClientState(){
+  const res = await fetch(ESPACE_CLIENT_BACKEND_URL, { method: "GET" });
+  if(!res.ok) throw new Error("Réponse HTTP " + res.status);
+  const data = await res.json();
+  if(data.status !== "ok") throw new Error(data.message || "Erreur backend inconnue");
+  return data;
+}
+
+async function espaceClientPost(body){
+  const res = await fetch(ESPACE_CLIENT_BACKEND_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(body),
+  });
+  if(!res.ok) throw new Error("Réponse HTTP " + res.status);
+  const data = await res.json();
+  if(data.status !== "ok") throw new Error(data.message || "Erreur backend inconnue");
+  return data;
+}
+
+// Migration UNIQUE (une seule fois, jamais rejouée ensuite) : si le backend
+// est encore complètement vide et que cet appareil a déjà des données
+// locales, on les y dépose une bonne fois pour toutes.
+async function pushEspaceClientStateOnce(){
+  await espaceClientPost({
+    action: "saveState",
+    state: { prospects, sessions, livrables, consultants: consultantAccounts, adminPassword },
+  });
+  try{ localStorage.setItem(ESPACE_MIGRATION_FLAG_KEY, "1"); }catch(e){}
+}
+
+function apiUpsertClient(client){ return espaceClientPost({ action:"upsertClient", client }); }
+function apiDeleteClient(id){ return espaceClientPost({ action:"deleteClient", id }); }
+function apiUpsertSession(session){ return espaceClientPost({ action:"upsertSession", session }); }
+function apiDeleteSession(id){ return espaceClientPost({ action:"deleteSession", id }); }
+function apiUpsertLivrable(livrable){ return espaceClientPost({ action:"upsertLivrable", livrable }); }
+function apiDeleteLivrable(id){ return espaceClientPost({ action:"deleteLivrable", id }); }
+function apiUpsertConsultant(consultant){ return espaceClientPost({ action:"upsertConsultant", consultant }); }
+function apiDeleteConsultant(id){ return espaceClientPost({ action:"deleteConsultant", id }); }
+function apiSetAdminPassword(pw){ return espaceClientPost({ action:"setAdminPassword", adminPassword: pw }); }
+
+// Envoie un fichier (livrable) vers Google Drive via le backend, et renvoie
+// { url, fileId }. Si le backend n'est pas configuré ou injoignable, on
+// retombe sur l'ancien comportement (fichier encodé directement dans les
+// données — ne fonctionnera alors que sur cet appareil).
+async function uploadLivrableFile(file){
+  if(espaceClientBackendConfigured){
+    try{
+      const fullDataUrl = await fileToDataUrl(file);
+      const base64 = fullDataUrl.split(",")[1];
+      const data = await espaceClientPost({ action: "uploadLivrable", livrable: { fileBase64: base64, mimeType: file.type, nom: file.name } });
+      return { url: data.url, fileId: data.fileId };
+    }catch(e){
+      console.error("Envoi vers Drive impossible, fichier conservé localement uniquement :", e);
+      toast("⚠️ Fichier enregistré sur cet appareil seulement (Drive indisponible)");
+    }
+  }
+  const url = await fileToDataUrl(file); // repli local (data: URI), visible seulement sur cet appareil
+  return { url, fileId: null };
+}
+
+// Sauvegarde locale (cache instantané + fonctionnement hors-ligne). Ne
+// touche jamais le backend — voir persist() pour la synchronisation serveur.
+async function persistLocalCache(){
+  const data = { prospects, sessions, livrables, testimonials, consultants: consultantAccounts, adminPassword };
+  return await store.set("gsc_data", data);
+}
+
+// change = { entity: 'client'|'session'|'livrable'|'consultant'|'adminPassword', op: 'upsert'|'delete', data }
+// Sans "change" fourni : sauvegarde locale uniquement (aucun appel serveur).
+async function persist(change){
+  const localOk = await persistLocalCache();
+  let remoteOk = true;
+
+  if(espaceClientBackendConfigured && change){
+    try{
+      const { entity, op, data } = change;
+      if(entity === "client")     { if(op==="upsert") await apiUpsertClient(data); else await apiDeleteClient(data); }
+      else if(entity === "session")    { if(op==="upsert") await apiUpsertSession(data); else await apiDeleteSession(data); }
+      else if(entity === "livrable")   { if(op==="upsert") await apiUpsertLivrable(data); else await apiDeleteLivrable(data); }
+      else if(entity === "consultant") { if(op==="upsert") await apiUpsertConsultant(data); else await apiDeleteConsultant(data); }
+      else if(entity === "adminPassword") { await apiSetAdminPassword(data); }
+    }catch(e){
+      console.error("Synchronisation backend impossible (les données restent en sécurité en local sur cet appareil) :", e);
+      remoteOk = false;
+    }
+  }
+
+  const ok = (espaceClientBackendConfigured && change) ? remoteOk : localOk;
+  showSaveBanner(!ok);
+  return ok;
+}
+
+// ---------------------------------------------------------------
+// Accès par rôle — filtres de visibilité
+// ---------------------------------------------------------------
+function visibleProspects(){
+  if(!currentUser) return [];
+  if(currentUser.role === "admin") return prospects;
+  if(currentUser.role === "consultant") return prospects.filter(p=>p.consultant === currentUser.name);
+  if(currentUser.role === "client") return prospects.filter(p=>p.id === currentUser.clientId);
+  return [];
+}
+function visibleSessions(){
+  const ids = visibleProspects().map(p=>p.id);
+  return sessions.filter(s=>ids.includes(s.clientId));
+}
+
+// ---------------------------------------------------------------
+// Données de démonstration (cas NATURA — cf. modèles GSC)
+// ---------------------------------------------------------------
+function seedData(){
+  return {
+    prospects: [
+      { id:"p1", nom:"Aïssatou Ndiaye", entreprise:"NATURA Cosmétiques", secteur:"Cosmétiques naturels",
+        mode:"hybride", etape:7, statut:"Client actif", telephone:"+221 77 000 00 01",
+        prochaineAction:"Bilan de vente à 3 semaines", consultant:"Fatou Sarr", password:"1234" },
+      { id:"p2", nom:"Mme Faye", entreprise:"Boutique Thiès Beauté", secteur:"Distribution cosmétique",
+        mode:"presentiel", etape:6, statut:"Proposition envoyée", telephone:"+221 77 000 00 02",
+        prochaineAction:"Relancer sous 5 jours", consultant:"Fatou Sarr", password:"1234" },
+      { id:"p3", nom:"Marième D.", entreprise:"Projet personnel", secteur:"À définir",
+        mode:"distance", etape:1, statut:"En discussion", telephone:"+221 77 000 00 03",
+        prochaineAction:"Envoyer catalogue produits", consultant:"Moussa Diop", password:null },
+      { id:"p4", nom:"Cheikh Cissé", entreprise:"C2C Invest", secteur:"Conseil en investissement",
+        mode:"distance", etape:3, statut:"En discussion", telephone:"+221 77 000 00 04",
+        prochaineAction:"Atelier Business Model Canvas", consultant:"Moussa Diop", password:null },
+    ],
+    sessions: [
+      { id:"s1", clientId:"p1", mode:"distance", lien:"https://meet.google.com/natura-suivi", etape:8,
+        date: nextDate(3) },
+      { id:"s2", clientId:"p2", mode:"presentiel", lieu:"Boutique Thiès Beauté", etape:7,
+        date: nextDate(7) },
+      { id:"s3", clientId:"p3", mode:"distance", lien:"https://meet.google.com/clarification-marieme", etape:1,
+        date: nextDate(1) },
+    ],
+    livrables: [
+      { id:"l1", clientId:"p1", etape:1, nom:"Fiche_clarification_NATURA.txt", who:"consultant", date: nextDate(-40),
+        dataUrl:"data:text/plain;base64,R1NDIEJVU0lORVNTIENFTlRFUgpGaWNoZSBkZSBjbGFyaWZpY2F0aW9uIGRlIHByb2pldCDigJQgTkFUVVJBIENvc23DqXRpcXVlcwpDbGllbnQgOiBBw69zc2F0b3UgTmRpYXllCklkw6llIGRlIHByb2pldCA6IENyw6llciB1bmUgbWFycXVlIGRlIGNvc23DqXRpcXVlcyBuYXR1cmVscyDDoCBiYXNlIGRlIGthcml0w6kgZXQgZGUgYmFvYmFiCkNpYmxlIHZpc8OpZSA6IEZlbW1lcyB1cmJhaW5lcyBkZSAyNSDDoCA0NSBhbnMKT2ZmcmUgZGUgdmFsZXVyIDogVW5lIGdhbW1lIGRlIHNvaW5zIDEwMCUgbmF0dXJlbHMsIGZhYnJpcXXDqXMgbG9jYWxlbWVudCwgw6AgcHJpeCBhY2Nlc3NpYmxlCihEb2N1bWVudCBkw6lwb3PDqSBwYXIgbGUgY29uc3VsdGFudCDigJQgw6l0YXBlIDEgOiBDbGFyaWZpY2F0aW9uIGR1IHByb2pldCk=" },
+      { id:"l2", clientId:"p1", etape:6, nom:"Devis_Boutique_Thies.txt", who:"consultant", date: nextDate(-20),
+        dataUrl:"data:text/plain;base64,R1NDIEJVU0lORVNTIENFTlRFUgpEZXZpcyAvIHByb3Bvc2l0aW9uIGNvbW1lcmNpYWxlCkNsaWVudCA6IEJvdXRpcXVlIFRoacOocyBCZWF1dMOpCk9mZnJlIDogMjAgY29mZnJldHMgZMOpY291dmVydGUgTkFUVVJBIGVuIGTDqXDDtHQtdmVudGUKUHJpeCA6IDcgMDAwIEZDRkEvY29mZnJldCAocHJpeCBib3V0aXF1ZSkKRMOpbGFpcyA6IExpdnJhaXNvbiBzb3VzIDUgam91cnMgb3V2csOpcwpWYWxpZGl0w6kgZGUgbG9mZnJlIDogMTUgam91cnMKKERvY3VtZW50IGTDqXBvc8OpIHBhciBsZSBjb25zdWx0YW50IOKAlCDDqXRhcGUgNiA6IENvbnZlcnNpb24gZXQgdmVudGUp" },
+      { id:"l3", clientId:"p1", etape:7, nom:"Questionnaire_satisfaction_rempli.txt", who:"client", date: nextDate(-5),
+        dataUrl:"data:text/plain;base64,R1NDIEJVU0lORVNTIENFTlRFUgpRdWVzdGlvbm5haXJlIGRlIHNhdGlzZmFjdGlvbiDigJQgcmVtcGxpCkNsaWVudCA6IEJvdXRpcXVlIFRoacOocyBCZWF1dMOpClF1YWxpdMOpIGRlIGxhY2NvbXBhZ25lbWVudCA6IDkvMTAKRMOpbGFpcyByZXNwZWN0w6lzIDogT3VpClBvaW50IGxlIHBsdXMgYXBwcsOpY2nDqSA6IGxhIHLDqWFjdGl2aXTDqSBldCBsYSBxdWFsaXTDqSBkdSBwYWNrYWdpbmcKUmVjb21tYW5kZXJhaXQgTkFUVVJBIDogT3VpCihEb2N1bWVudCBkw6lwb3PDqSBwYXIgbGUgY2xpZW50IOKAlCDDqXRhcGUgNyA6IExpdnJhaXNvbiBldCBzYXRpc2ZhY3Rpb24p" },
+    ],
+    consultants: [
+      { id:"c1", nom:"Fatou Sarr", telephone:"+221 77 111 22 33", password:"1234" },
+      { id:"c2", nom:"Moussa Diop", telephone:"+221 77 444 55 66", password:"1234" },
+    ]
+  };
+}
+function nextDate(days){
+  const d = new Date(); d.setDate(d.getDate()+days);
+  return d.toISOString().slice(0,10);
+}
+
+// ---------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------
+async function init(){
+  let loadedFromBackend = false;
+
+  if(espaceClientBackendConfigured){
+    try{
+      const remote = await fetchEspaceClientState();
+      const localCache = await store.get("gsc_data", null);
+      const alreadyMigrated = (()=>{ try{ return localStorage.getItem(ESPACE_MIGRATION_FLAG_KEY) === "1"; }catch(e){ return false; } })();
+
+      if(!alreadyMigrated && (remote.prospects||[]).length === 0 && localCache && (localCache.prospects||[]).length > 0){
+        // Le backend est vide mais des données existent déjà localement (cas typique :
+        // première synchronisation depuis l'appareil de l'admin) → on les transfère
+        // une fois vers le backend partagé. Ce transfert ne se déclenche plus jamais
+        // ensuite (voir ESPACE_MIGRATION_FLAG_KEY), pour ne jamais risquer d'écraser
+        // des données plus récentes avec une ancienne copie locale.
+        prospects = localCache.prospects; sessions = localCache.sessions || [];
+        livrables = localCache.livrables || []; consultantAccounts = localCache.consultants || [];
+        adminPassword = localCache.adminPassword || DEFAULT_ADMIN_PASSWORD;
+        testimonials = localCache.testimonials || [];
+        await pushEspaceClientStateOnce();
+        toast("Données existantes synchronisées vers le backend partagé");
+      } else {
+        prospects = remote.prospects || [];
+        sessions = remote.sessions || [];
+        livrables = remote.livrables || [];
+        consultantAccounts = remote.consultants || [];
+        adminPassword = remote.adminPassword || DEFAULT_ADMIN_PASSWORD;
+        testimonials = (localCache && localCache.testimonials) || [];
+        try{ localStorage.setItem(ESPACE_MIGRATION_FLAG_KEY, "1"); }catch(e){}
+      }
+      loadedFromBackend = true;
+      await store.set("gsc_data", { prospects, sessions, livrables, testimonials, consultants: consultantAccounts, adminPassword }); // cache local à jour, pour un fonctionnement hors-ligne
+    }catch(e){
+      console.error("Backend Espace Client indisponible, utilisation du cache local de cet appareil :", e);
+    }
+  }
+
+  if(!loadedFromBackend){
+    const saved = await store.get("gsc_data", null);
+    if(saved){
+      prospects = saved.prospects; sessions = saved.sessions; livrables = saved.livrables || [];
+      testimonials = saved.testimonials || [];
+      consultantAccounts = saved.consultants || [];
+      adminPassword = saved.adminPassword || DEFAULT_ADMIN_PASSWORD;
+    } else {
+      const s = seedData();
+      prospects = s.prospects; sessions = s.sessions; livrables = s.livrables; consultantAccounts = s.consultants;
+      testimonials = [];
+      adminPassword = DEFAULT_ADMIN_PASSWORD;
+      await persist();
+    }
+  }
+
+  // Récupère les clients "Signé / Client" déposés depuis le Pipeline commercial
+  // AVANT d'afficher l'écran de connexion, pour qu'un client tout juste signé
+  // puisse se connecter immédiatement avec son mot de passe temporaire.
+  await importPendingBridgeClients();
+
+  bindTabs();
+  bindForms();
+  bindSessionRowActions();
+  bindLivrableForm();
+  bindTeamForm();
+  bindClientCreateForm();
+  bindAdminPasswordForm();
+  bindSatisfactionForm();
+  document.getElementById("retrySaveBtn").addEventListener("click", async ()=>{
+    const ok = await persistLocalCache();
+    showSaveBanner(!ok);
+    if(ok) toast("Cache local à jour. Si une action précise avait échoué, relancez-la pour la resynchroniser.");
+  });
+  initLogin();
+}
+
+// ---------------------------------------------------------------
+// Pont avec 02_Plateforme_Prospection_Diagnostic.html — import des
+// clients "Signé / Client" en attente.
+// ---------------------------------------------------------------
+const clientBridgeConfigured = CLIENT_BRIDGE_WEBAPP_URL.indexOf("REMPLACEZ") === -1;
+
+async function fetchAllBridgeClients(){
+  const res = await fetch(CLIENT_BRIDGE_WEBAPP_URL, { method:"GET" });
+  if(!res.ok) throw new Error("Réponse HTTP " + res.status);
+  const data = await res.json();
+  if(data.status !== "ok") throw new Error(data.message || "Erreur backend inconnue");
+  return data.clients || [];
+}
+
+async function markBridgeClientImported(id){
+  try{
+    await fetch(CLIENT_BRIDGE_WEBAPP_URL, {
+      method:"POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action:"markImported", id }),
+    });
+  }catch(e){ console.error("Échec du marquage 'importé' sur le pont Clients :", e); }
+}
+
+async function importPendingBridgeClients(){
+  if(!clientBridgeConfigured) return;
+  // On récupère TOUJOURS la liste complète des clients déposés par le pipeline —
+  // pas seulement les "nouveaux" — car chaque appareil (ordinateur admin,
+  // téléphone du client...) a son propre stockage local indépendant. Sans ça,
+  // seul le tout premier appareil qui se connecte après la création reçoit le
+  // compte, et le client ne peut jamais se connecter depuis un autre appareil.
+  // La fusion reste sans risque de doublon : on ne fait rien si le client est
+  // déjà présent localement (identifié par sourceProspectId).
+  let all;
+  try{
+    all = await fetchAllBridgeClients();
+  }catch(e){
+    console.error("Pont Clients indisponible :", e);
+    return;
+  }
+  if(all.length === 0) return;
+
+  let imported = 0;
+  const newClients = [];
+  for(const c of all){
+    // Idempotent : si ce prospect a déjà été importé (même via l'ancien repli
+    // localStorage), on relie simplement le compte existant plutôt que d'en
+    // recréer un.
+    let existing = prospects.find(p => p.sourceProspectId === c.sourceProspectId);
+    if(!existing) existing = prospects.find(p => !p.sourceProspectId && p.nom && p.nom.toLowerCase() === (c.nom||"").toLowerCase());
+    if(existing){
+      existing.sourceProspectId = c.sourceProspectId;
+      continue; // déjà présent sur CET appareil : on ne touche à rien (mot de passe éventuellement déjà changé par le client)
+    }
+    const newClient = {
+      id: c.id || ("p"+Date.now()+Math.floor(Math.random()*1000)),
+      sourceProspectId: c.sourceProspectId,
+      nom: c.nom, entreprise: c.entreprise || "", secteur: c.secteur || "À définir",
+      mode: "hybride", etape: 1, statut: "Client actif",
+      telephone: c.telephone || "",
+      prochaineAction: "Premier rendez-vous d'accompagnement à planifier",
+      consultant: c.consultant || null,
+      password: String(c.password),
+    };
+    prospects.push(newClient);
+    newClients.push(newClient);
+    imported++;
+    markBridgeClientImported(c.id); // simple suivi de lecture dans la feuille, sans incidence sur la synchronisation
+  }
+  if(imported > 0){
+    await persistLocalCache();
+    if(espaceClientBackendConfigured){
+      for(const nc of newClients){
+        try{ await apiUpsertClient(nc); }catch(e){ console.error("Synchronisation du nouveau client impossible :", e); }
+      }
+    }
+    toast(`${imported} nouveau${imported>1?"x":""} client${imported>1?"s":""} importé${imported>1?"s":""} automatiquement depuis le Pipeline`);
+  }
+}
+
+function renderAll(){
+  applyRoleUI();
+  renderDashboard();
+  renderSessionSelects();
+  renderSessions();
+  renderEspaceSelect();
+  renderEspace();
+  renderTeam();
+  renderClientAccounts();
+}
+
+
+function showSaveBanner(show){
+  const b = document.getElementById("saveBanner");
+  if(b) b.classList.toggle("show", show);
+}
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+// ---------------------------------------------------------------
+// Notification des accès par WhatsApp (consultant ou client)
+// ---------------------------------------------------------------
+function buildAccessMessage(nom, password, roleLabel){
+  const lienLigne = PLATFORM_URL ? `\n\nLien de connexion : ${PLATFORM_URL}` : "";
+  return `Bonjour ${nom},\n\nVoici vos accès à la plateforme GSC Business Center (espace ${roleLabel}) :\n\nNom : ${nom}\nMot de passe : ${password}${lienLigne}\n\nMerci de garder ces informations confidentielles. Vous pourrez modifier votre mot de passe une fois connecté.`;
+}
+
+function sendAccessByWhatsApp(telephone, nom, password, roleLabel){
+  const digits = (telephone || "").replace(/[^\d]/g, "");
+  if(!digits){
+    toast("Aucun numéro de téléphone renseigné pour cette personne");
+    return false;
+  }
+  const msg = buildAccessMessage(nom, password, roleLabel);
+  const url = `https://wa.me/${digits}?text=${encodeURIComponent(msg)}`;
+  window.open(url, "_blank", "noopener");
+  return true;
+}
+
+// ---------------------------------------------------------------
+// Connexion & rôles
+// ---------------------------------------------------------------
+const ROLE_LABEL = { admin:"Admin", consultant:"Consultant", client:"Client" };
+
+function initLogin(){
+  let selectedRole = "admin";
+  const nameField = document.getElementById("loginNameField");
+  const nameLabel = document.getElementById("loginNameLabel");
+  const nameInput = document.getElementById("loginName");
+  const codeLabel = document.getElementById("loginCodeLabel");
+  const hint = document.getElementById("loginHint");
+
+  function refreshFields(){
+    nameInput.value = "";
+    if(selectedRole === "admin"){
+      nameField.style.display = "none";
+      codeLabel.textContent = "Code d'accès administrateur";
+      hint.innerHTML = `Connectez-vous avec votre mot de passe administrateur.`;
+    } else if(selectedRole === "consultant"){
+      nameField.style.display = "block";
+      nameLabel.textContent = "Votre nom (consultant)";
+      nameInput.placeholder = "Votre nom";
+      codeLabel.textContent = "Mot de passe personnel";
+      hint.innerHTML = `Saisissez le nom et le mot de passe créés pour vous par l'administrateur.`;
+    } else {
+      nameField.style.display = "block";
+      nameLabel.textContent = "Votre nom (client)";
+      nameInput.placeholder = "Votre nom";
+      codeLabel.textContent = "Mot de passe personnel";
+      hint.innerHTML = `Saisissez le nom et le mot de passe créés pour vous par l'administrateur.`;
+    }
+  }
+  refreshFields();
+
+  document.getElementById("roleToggle").querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      document.getElementById("roleToggle").querySelectorAll("button").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+      selectedRole = b.dataset.role;
+      document.getElementById("loginError").style.display = "none";
+      refreshFields();
+    });
+  });
+
+  document.getElementById("loginForm").addEventListener("submit", e=>{
+    e.preventDefault();
+    const code = document.getElementById("loginCode").value.trim();
+    const typedName = nameInput.value.trim().toLowerCase();
+    const errBox = document.getElementById("loginError");
+    const genericError = () => {
+      errBox.textContent = "Nom ou mot de passe incorrect.";
+      errBox.style.display = "block";
+    };
+
+    if(selectedRole === "admin"){
+      if(code !== adminPassword){
+        errBox.textContent = "Code d'accès incorrect.";
+        errBox.style.display = "block";
+        return;
+      }
+      currentUser = { role:"admin", name:"Administrateur" };
+    } else if(selectedRole === "consultant"){
+      if(!typedName){ genericError(); return; }
+      const account = consultantAccounts.find(c=>c.nom.trim().toLowerCase() === typedName);
+      if(!account || String(code) !== String(account.password)){ genericError(); return; }
+      currentUser = { role:"consultant", name: account.nom };
+    } else {
+      if(!typedName){ genericError(); return; }
+      const p = prospects.find(x=>x.nom.trim().toLowerCase() === typedName);
+      if(!p || !p.password || String(code) !== String(p.password)){ genericError(); return; }
+      currentUser = { role:"client", name: p.nom, clientId: p.id };
+    }
+
+    errBox.style.display = "none";
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("userBar").innerHTML =
+      `<b>${currentUser.name}</b><span class="role-badge">${ROLE_LABEL[currentUser.role]}</span>`;
+    renderAll();
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", ()=>{
+    currentUser = null;
+    selectedRole = "admin";
+    document.getElementById("roleToggle").querySelectorAll("button").forEach(x=>{
+      x.classList.toggle("sel", x.dataset.role === "admin");
+    });
+    document.getElementById("loginCode").value = "";
+    document.getElementById("loginError").style.display = "none";
+    refreshFields();
+    document.getElementById("loginScreen").style.display = "flex";
+  });
+}
+
+function applyRoleUI(){
+  const role = currentUser.role;
+  let firstVisible = null;
+  document.querySelectorAll("nav.tabs button").forEach(btn=>{
+    const roles = btn.dataset.roles.split(",");
+    const allowed = roles.includes(role);
+    btn.style.display = allowed ? "inline-block" : "none";
+    if(allowed && !firstVisible) firstVisible = btn;
+  });
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  if(firstVisible){
+    firstVisible.classList.add("active");
+    document.getElementById("view-"+firstVisible.dataset.view).classList.add("active");
+  }
+
+  // Espace client : le client accède uniquement à son propre dossier
+  const eClientField = document.getElementById("eClient").closest(".field");
+  if(role === "client"){
+    eClientField.style.display = "none";
+    document.getElementById("lWhoToggle").style.display = "none";
+  } else {
+    eClientField.style.display = "block";
+    document.getElementById("lWhoToggle").style.display = "flex";
+  }
+
+  // Sous-onglets de l'Espace client : "Créer un compte client" réservé à l'admin
+  let firstSubVisible = null;
+  document.querySelectorAll("#espaceSubtabs button").forEach(btn=>{
+    const allowed = !btn.dataset.roles || btn.dataset.roles.split(",").includes(role);
+    btn.style.display = allowed ? "inline-block" : "none";
+    if(allowed && !firstSubVisible) firstSubVisible = btn;
+  });
+  document.querySelectorAll("#espaceSubtabs button").forEach(b=>b.classList.remove("sub-active"));
+  document.querySelectorAll(".subview").forEach(v=>v.classList.remove("sub-active"));
+  if(firstSubVisible){
+    firstSubVisible.classList.add("sub-active");
+    document.getElementById("sub-"+firstSubVisible.dataset.subview).classList.add("sub-active");
+  }
+}
+
+// ---------------------------------------------------------------
+// Tabs
+// ---------------------------------------------------------------
+function bindTabs(){
+  document.querySelectorAll("nav.tabs button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.remove("active"));
+      document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("view-"+btn.dataset.view).classList.add("active");
+    });
+  });
+
+  document.querySelectorAll("#espaceSubtabs button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll("#espaceSubtabs button").forEach(b=>b.classList.remove("sub-active"));
+      document.querySelectorAll(".subview").forEach(v=>v.classList.remove("sub-active"));
+      btn.classList.add("sub-active");
+      document.getElementById("sub-"+btn.dataset.subview).classList.add("sub-active");
+      if(btn.dataset.subview === "temoignages") renderTemoignagesAdmin();
+    });
+  });
+}
+
+// ---------------------------------------------------------------
+// Dashboard
+// ---------------------------------------------------------------
+function renderDashboard(){
+  const kpi = document.getElementById("kpiGrid");
+  const myProspects = visibleProspects();
+  const mySessions = visibleSessions();
+  const total = myProspects.length;
+  const clients = myProspects.filter(p=>p.statut==="Client actif").length;
+  const enCours = myProspects.filter(p=>p.statut!=="Client actif").length;
+  const upcoming = mySessions.filter(s=>s.date>=todayISO()).length;
+  kpi.innerHTML = `
+    ${kpiCard(total,"Prospects &amp; clients")}
+    ${kpiCard(clients,"Clients actifs")}
+    ${kpiCard(enCours,"En cours de conversion")}
+    ${kpiCard(upcoming,"Sessions à venir")}
+  `;
+
+  const counts = { presentiel:0, distance:0, hybride:0 };
+  myProspects.forEach(p=> counts[p.mode]++ );
+  const max = Math.max(1, ...Object.values(counts));
+  const split = document.getElementById("modeSplit");
+  split.innerHTML = ["presentiel","distance","hybride"].map(m=>`
+    <div class="mode-row">
+      <div class="label">${MODE_LABEL[m]}</div>
+      <div class="bar-track"><div class="bar-fill fill-${m}" style="width:${(counts[m]/max*100)||0}%"></div></div>
+      <div class="count">${counts[m]}</div>
+    </div>
+  `).join("");
+
+  const up = mySessions.filter(s=>s.date>=todayISO()).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
+  const dashUp = document.getElementById("dashUpcoming");
+  dashUp.innerHTML = up.length ? up.map(sessionRow).join("") : `<div class="empty">Aucune session planifiée pour le moment.</div>`;
+}
+function kpiCard(val,lbl){
+  return `<div class="kpi-card"><div class="val">${val}</div><div class="lbl">${lbl}</div></div>`;
+}
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+
+// ---------------------------------------------------------------
+// Statuts de conversion (utilisés dans l'édition de fiche client)
+// ---------------------------------------------------------------
+const STATUTS = ["En discussion","Proposition envoyée","Client actif","Terminé"];
+
+// ---------------------------------------------------------------
+// Sessions
+// ---------------------------------------------------------------
+// ---------------------------------------------------------------
+// Calendly — résolution du lien de réservation selon le rôle connecté
+// ---------------------------------------------------------------
+function resolveCalendlyUrl(){
+  if(!currentUser) return null;
+  if(currentUser.role === "admin"){
+    return CALENDLY_ORG_URL || null;
+  }
+  if(currentUser.role === "consultant"){
+    const acc = consultantAccounts.find(c=>c.nom === currentUser.name);
+    return (acc && acc.calendlyUrl) || CALENDLY_ORG_URL || null;
+  }
+  if(currentUser.role === "client"){
+    const p = prospects.find(x=>x.id === currentUser.clientId);
+    if(p && p.consultant){
+      const acc = consultantAccounts.find(c=>c.nom === p.consultant);
+      if(acc && acc.calendlyUrl) return acc.calendlyUrl;
+    }
+    return CALENDLY_ORG_URL || null;
+  }
+  return null;
+}
+
+function updateCalendlyCard(){
+  const card = document.getElementById("calendlyCard");
+  const url = resolveCalendlyUrl();
+  if(url){
+    card.style.display = "block";
+    document.getElementById("openCalendlyBtn").onclick = ()=>{
+      if(window.Calendly && window.Calendly.initPopupWidget){
+        window.Calendly.initPopupWidget({ url });
+      } else {
+        window.open(url, "_blank", "noopener");
+      }
+    };
+  } else {
+    card.style.display = "none";
+  }
+}
+
+function renderSessionSelects(){
+  updateCalendlyCard();
+  const myStats = document.getElementById("myStatsSessions");
+  if(currentUser.role === "consultant"){
+    const mine = visibleProspects();
+    const actifs = mine.filter(p=>p.statut==="Client actif").length;
+    const upcoming = visibleSessions().filter(s=>s.date>=todayISO()).length;
+    myStats.innerHTML = `
+      <div class="my-stats">
+        <div class="stat"><div class="n">${mine.length}</div><div class="l">Portefeuille</div></div>
+        <div class="stat"><div class="n">${actifs}</div><div class="l">Clients actifs</div></div>
+        <div class="stat"><div class="n">${upcoming}</div><div class="l">Sessions à venir</div></div>
+      </div>`;
+  } else {
+    myStats.innerHTML = "";
+  }
+
+  const formCard = document.getElementById("sessionForm").closest(".card");
+  formCard.style.display = (currentUser.role === "client") ? "none" : "block";
+
+  const cSel = document.getElementById("sClient");
+  cSel.innerHTML = visibleProspects().map(p=>`<option value="${p.id}">${p.nom} — ${p.entreprise}</option>`).join("");
+  const eSel = document.getElementById("sEtape");
+  eSel.innerHTML = ETAPES.map(e=>`<option value="${e.id}">Étape ${e.id} — ${e.nom}</option>`).join("");
+
+  let selectedMode = "presentiel";
+  const toggle = document.getElementById("sModeToggle");
+  toggle.querySelectorAll("button").forEach(b=>{
+    b.classList.toggle("sel", b.dataset.mode===selectedMode);
+    b.onclick = ()=>{
+      toggle.querySelectorAll("button").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+      selectedMode = b.dataset.mode;
+      document.getElementById("sLieuField").style.display = selectedMode==="distance" ? "none" : "block";
+      document.getElementById("sLienField").style.display = selectedMode==="presentiel" ? "none" : "block";
+    };
+  });
+  window._getSelectedMode = ()=>selectedMode;
+  window._setSelectedMode = (m)=>{ selectedMode = m; };
+}
+
+function renderSessions(){
+  const list = document.getElementById("sessionList");
+  const up = visibleSessions().filter(s=>s.date>=todayISO()).sort((a,b)=>(a.date+(a.heure||"")).localeCompare(b.date+(b.heure||"")));
+  list.innerHTML = up.length ? up.map(sessionRow).join("") : `<div class="empty">Aucune session à venir.</div>`;
+}
+
+function canManageSession(){
+  return !!currentUser && (currentUser.role === "admin" || currentUser.role === "consultant");
+}
+
+function sessionRow(s){
+  const client = prospects.find(p=>p.id===s.clientId);
+  const etape = ETAPES.find(e=>e.id===s.etape);
+  const d = new Date(s.date+"T00:00:00");
+  const day = d.getDate();
+  const month = d.toLocaleDateString("fr-FR",{month:"short"}).replace(".","");
+  const detail = s.mode==="presentiel" ? `Lieu : ${s.lieu||"—"}`
+               : s.mode==="distance" ? `<a class="session-link" href="${s.lien||'#'}" target="_blank">Rejoindre la visio</a>`
+               : `${s.lieu?("Lieu : "+s.lieu+" · "):""}${s.lien?`<a class="session-link" href="${s.lien}" target="_blank">Lien visio</a>`:""}`;
+  return `
+    <div class="session-item">
+      <div class="session-date"><div class="d">${day}</div><div class="m">${month}</div></div>
+      <div class="session-info">
+        <b>${client?client.nom:"Client"} <span class="badge badge-${s.mode}" style="margin-left:6px;">${MODE_LABEL[s.mode]}</span></b>
+        <span>Étape ${s.etape} — ${etape?etape.nom:""}${s.heure?` · ${s.heure}`:""}</span>
+        <span>${detail}</span>
+        ${canManageSession() ? `
+        <div style="display:flex;gap:6px;margin-top:6px;">
+          <button type="button" class="btn-small" data-action="editSession" data-id="${s.id}">✏️ Modifier</button>
+          <button type="button" class="btn-small danger" data-action="deleteSession" data-id="${s.id}">🗑 Supprimer</button>
+        </div>` : ""}
+      </div>
+    </div>`;
+}
+
+function bindSessionRowActions(){
+  // Délégation d'événements sur tout le document : les lignes de session
+  // apparaissent à la fois dans l'onglet Sessions et sur le tableau de bord
+  // (même fonction sessionRow réutilisée aux deux endroits) — un seul
+  // branchement ici couvre les deux cas, y compris après chaque re-rendu.
+  document.body.addEventListener("click", async (e)=>{
+    const editBtn = e.target.closest("[data-action='editSession']");
+    if(editBtn){
+      document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.remove("active"));
+      document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+      document.querySelector('nav.tabs button[data-view="sessions"]').classList.add("active");
+      document.getElementById("view-sessions").classList.add("active");
+      startEditSession(editBtn.dataset.id);
+      return;
+    }
+    const delBtn = e.target.closest("[data-action='deleteSession']");
+    if(delBtn){
+      const id = delBtn.dataset.id;
+      const s = sessions.find(x=>x.id===id);
+      if(!s) return;
+      const client = prospects.find(p=>p.id===s.clientId);
+      if(!confirm(`Supprimer définitivement cette session${client?" pour "+client.nom:""} ?`)) return;
+      sessions = sessions.filter(x=>x.id!==id);
+      if(editingSessionId===id) cancelEditSession();
+      const ok = await persist({ entity:"session", op:"delete", data:id });
+      renderSessions(); renderDashboard();
+      if(ok) toast("Session supprimée");
+      else toast("Suppression appliquée localement — en attente d'enregistrement");
+    }
+  });
+}
+
+let editingSessionId = null;
+
+function startEditSession(id){
+  const s = sessions.find(x=>x.id===id);
+  if(!s) return;
+  editingSessionId = id;
+
+  document.getElementById("sClient").value = s.clientId;
+  document.getElementById("sEtape").value = s.etape;
+  document.getElementById("sDate").value = s.date;
+  document.getElementById("sHeure").value = s.heure || "";
+  document.getElementById("sLieu").value = s.lieu || "";
+  document.getElementById("sLien").value = s.lien || "";
+
+  const toggle = document.getElementById("sModeToggle");
+  toggle.querySelectorAll("button").forEach(b=>b.classList.toggle("sel", b.dataset.mode===s.mode));
+  window._setSelectedMode && window._setSelectedMode(s.mode);
+  document.getElementById("sLieuField").style.display = s.mode==="distance" ? "none" : "block";
+  document.getElementById("sLienField").style.display = s.mode==="presentiel" ? "none" : "block";
+
+  document.getElementById("sSubmitBtn").textContent = "Enregistrer les modifications";
+  document.getElementById("sCancelEditBtn").style.display = "inline-block";
+  document.getElementById("sessionForm").scrollIntoView({ behavior:"smooth", block:"center" });
+}
+
+function cancelEditSession(){
+  editingSessionId = null;
+  document.getElementById("sessionForm").reset();
+  document.getElementById("sSubmitBtn").textContent = "Planifier la session";
+  document.getElementById("sCancelEditBtn").style.display = "none";
+  const toggle = document.getElementById("sModeToggle");
+  toggle.querySelectorAll("button").forEach(b=>b.classList.toggle("sel", b.dataset.mode==="presentiel"));
+  window._setSelectedMode && window._setSelectedMode("presentiel");
+  document.getElementById("sLieuField").style.display = "block";
+  document.getElementById("sLienField").style.display = "none";
+}
+
+// ---------------------------------------------------------------
+// Espace client — progression & livrables
+// ---------------------------------------------------------------
+function renderEspaceSelect(){
+  const sel = document.getElementById("eClient");
+  sel.innerHTML = visibleProspects().map(p=>`<option value="${p.id}">${p.nom} — ${p.entreprise}</option>`).join("");
+  if(currentUser.role === "client") sel.value = currentUser.clientId;
+  sel.onchange = renderEspace;
+
+  const lEtape = document.getElementById("lEtape");
+  lEtape.innerHTML = ETAPES.map(e=>`<option value="${e.id}">Étape ${e.id} — ${e.nom}</option>`).join("");
+
+  document.getElementById("lWhoToggle").querySelectorAll("button").forEach(b=>{
+    b.classList.toggle("sel", b.dataset.who === (currentUser.role==="client" ? "client" : "consultant"));
+    b.onclick = ()=>{
+      document.getElementById("lWhoToggle").querySelectorAll("button").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+    };
+  });
+
+  const fileInput = document.getElementById("lFile");
+  const fileLabel = document.getElementById("lFileLabel");
+  fileInput.onchange = ()=>{
+    if(fileInput.files[0]){
+      fileLabel.textContent = fileInput.files[0].name;
+      fileLabel.classList.add("has-file");
+      fileLabel.appendChild(fileInput);
+    }
+  };
+}
+
+function currentEspaceClientId(){
+  if(currentUser.role === "client") return currentUser.clientId;
+  const sel = document.getElementById("eClient");
+  const vis = visibleProspects();
+  return sel && sel.value ? sel.value : (vis[0] && vis[0].id);
+}
+
+function canManageLivrable(d){
+  if(!currentUser) return false;
+  if(currentUser.role === "admin") return true;
+  if(currentUser.role === "consultant") return true;
+  if(currentUser.role === "client") return d.who === "client";
+  return false;
+}
+
+let editingLivrableId = null;
+
+// ---------------------------------------------------------------
+// Progression automatique des étapes
+// Une étape est considérée "Terminée" quand : (1) au moins un livrable a
+// été déposé pour cette étape, ET (2) l'étape suivante a déjà démarré,
+// c'est-à-dire qu'un livrable existe pour une étape ultérieure OU qu'une
+// session a été programmée pour une étape ultérieure.
+// Il reste toujours possible d'ajouter des livrables sur une étape déjà
+// terminée (ou toute étape passée) — cela ne fait jamais reculer la
+// progression affichée.
+// ---------------------------------------------------------------
+function isStepAutoDone(clientId, etapeId){
+  const hasLivrableThisStep = livrables.some(l=>l.clientId===clientId && l.etape===etapeId);
+  if(!hasLivrableThisStep) return false;
+  const hasLivrableLaterStep = livrables.some(l=>l.clientId===clientId && l.etape>etapeId);
+  const hasSessionLaterStep = sessions.some(s=>s.clientId===clientId && s.etape>etapeId);
+  return hasLivrableLaterStep || hasSessionLaterStep;
+}
+
+function computeAutoEtape(clientId){
+  for(let n=1; n<=10; n++){
+    if(!isStepAutoDone(clientId, n)) return n;
+  }
+  return 10;
+}
+
+// Étape "effective" affichée au client : le plus grand entre l'étape fixée
+// manuellement par l'admin (utile pour les étapes sans livrable, ex. atelier
+// oral) et l'étape déduite automatiquement de l'activité réelle — la
+// progression automatique ne fait donc jamais reculer un réglage manuel.
+function effectiveEtape(p){
+  return Math.max(p.etape||1, computeAutoEtape(p.id));
+}
+
+// Met à jour p.etape si la progression automatique a dépassé la valeur
+// actuellement enregistrée — à appeler après tout ajout de livrable ou de
+// session, avant persist().
+function syncClientEtape(clientId){
+  const p = prospects.find(x=>x.id===clientId);
+  if(!p) return false;
+  const auto = computeAutoEtape(clientId);
+  if(auto > (p.etape||1)){ p.etape = auto; return true; }
+  return false;
+}
+
+function renderEspace(){
+  const clientId = currentEspaceClientId();
+  const p = prospects.find(x=>x.id===clientId);
+  const box = document.getElementById("eProgress");
+  if(!p){ box.innerHTML = `<div class="empty">Aucun dossier client à afficher.</div>`; return; }
+
+  const clientEtape = effectiveEtape(p);
+  const canSeeHint = currentUser.role === "admin" || currentUser.role === "consultant";
+  box.innerHTML = ETAPES.map(e=>{
+    const state = e.id < clientEtape ? "done" : e.id === clientEtape ? "current" : "todo";
+    const label = state==="done" ? "Terminée" : state==="current" ? "En cours" : "À venir";
+    const docs = livrables.filter(l=>l.clientId===clientId && l.etape===e.id);
+    // Petit indice visuel (admin/consultant uniquement) pour comprendre ce qui
+    // manque encore pour que l'étape passe automatiquement à "Terminée".
+    let hint = "";
+    if(canSeeHint && state==="current"){
+      const hasLivrable = livrables.some(l=>l.clientId===clientId && l.etape===e.id);
+      const hasNext = livrables.some(l=>l.clientId===clientId && l.etape>e.id) || sessions.some(s=>s.clientId===clientId && s.etape>e.id);
+      if(!hasLivrable) hint = "ℹ️ Passera à « Terminée » dès qu'un livrable sera déposé pour cette étape, puis qu'une session ou un livrable sera ajouté pour une étape suivante.";
+      else if(!hasNext) hint = "ℹ️ Livrable reçu — passera à « Terminée » dès qu'une session ou un livrable sera ajouté pour une étape suivante.";
+    }
+    return `
+    <div class="progress-step ${state}">
+      <div class="dot">${state==="done" ? "✓" : e.id}</div>
+      <div class="content">
+        <b>Étape ${e.id} — ${e.nom}</b>
+        <span class="status status-${state}">${label}</span>
+        ${hint ? `<div style="font-size:10.5px;color:var(--grey);margin-top:2px;">${hint}</div>` : ""}
+        ${docs.map(d=>{
+          const manageable = canManageLivrable(d);
+          const isEditing = editingLivrableId === d.id;
+          return `
+          <div class="livrable-row-wrap">
+            <div class="livrable-row">
+              <div>
+                ${isEditing
+                  ? `<input type="text" class="lvRenameInput" data-id="${d.id}" value="${d.nom}">`
+                  : `<span>${d.nom}</span>`}
+                <div class="who">Déposé par ${d.who==="client"?"le client":"le consultant"} · ${formatDate(d.date)}</div>
+              </div>
+              ${d.dataUrl
+                ? `<a class="dl-btn" href="${d.dataUrl}" download="${d.nom}">⬇ Télécharger</a>`
+                : `<span style="font-size:10.5px;color:var(--grey);">Indisponible</span>`}
+            </div>
+            ${manageable ? `
+            <div class="livrable-actions">
+              ${isEditing
+                ? `<button type="button" class="btn-small" data-action="lvSaveName" data-id="${d.id}">Enregistrer le nom</button>
+                   <button type="button" class="btn-small" data-action="lvCancelEdit" data-id="${d.id}">Annuler</button>`
+                : `<button type="button" class="btn-small" data-action="lvRename" data-id="${d.id}">✏️ Renommer</button>`}
+              <label class="btn-small" data-role="replace-label">
+                🔄 Remplacer
+                <input type="file" class="lvReplaceInput" data-id="${d.id}" style="display:none;">
+              </label>
+              <button type="button" class="btn-small danger" data-action="lvDelete" data-id="${d.id}">🗑 Supprimer</button>
+            </div>` : ""}
+          </div>
+        `;}).join("")}
+      </div>
+    </div>`;
+  }).join("");
+
+  bindLivrableActions(p);
+  renderSatisfaction(p);
+}
+
+function formatDate(iso){
+  const d = new Date(iso+"T00:00:00");
+  return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"});
+}
+
+// ---------------------------------------------------------------
+// Gestion des livrables : renommer, remplacer, supprimer
+// ---------------------------------------------------------------
+function bindLivrableActions(p){
+  const box = document.getElementById("eProgress");
+
+  box.querySelectorAll("[data-action='lvRename']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      editingLivrableId = btn.dataset.id;
+      renderEspace();
+    });
+  });
+
+  box.querySelectorAll("[data-action='lvCancelEdit']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      editingLivrableId = null;
+      renderEspace();
+    });
+  });
+
+  box.querySelectorAll("[data-action='lvSaveName']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const input = box.querySelector(`.lvRenameInput[data-id="${id}"]`);
+      const val = input.value.trim();
+      if(!val){ toast("Le nom du fichier ne peut pas être vide"); return; }
+      const d = livrables.find(x=>x.id===id);
+      d.nom = val;
+      editingLivrableId = null;
+      const ok = await persist({ entity:"livrable", op:"upsert", data:d });
+      renderEspace();
+      if(ok) toast("Livrable renommé");
+      else toast("Renommage appliqué localement — en attente d'enregistrement");
+    });
+  });
+
+  box.querySelectorAll(".lvReplaceInput").forEach(input=>{
+    input.addEventListener("change", async ()=>{
+      const id = input.dataset.id;
+      const file = input.files[0];
+      if(!file) return;
+      if(file.size > 4*1024*1024){ toast("Fichier trop volumineux (max ~4 Mo)"); return; }
+      const { url, fileId } = await uploadLivrableFile(file);
+      const d = livrables.find(x=>x.id===id);
+      d.nom = file.name;
+      d.dataUrl = url;
+      d.fileId = fileId;
+      d.date = todayISO();
+      const ok = await persist({ entity:"livrable", op:"upsert", data:d });
+      renderEspace();
+      if(ok) toast("Fichier remplacé");
+      else toast("Fichier remplacé localement — en attente d'enregistrement");
+    });
+  });
+
+  box.querySelectorAll("[data-action='lvDelete']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const d = livrables.find(x=>x.id===id);
+      if(!confirm(`Supprimer définitivement le fichier « ${d.nom} » ?`)) return;
+      livrables = livrables.filter(x=>x.id!==id);
+      const ok = await persist({ entity:"livrable", op:"delete", data:id });
+      renderEspace();
+      if(ok) toast("Livrable supprimé");
+      else toast("Suppression appliquée localement — en attente d'enregistrement");
+    });
+  });
+}
+
+// ---------------------------------------------------------------
+// Questionnaire de satisfaction — actif uniquement à l'étape 10/10
+// ---------------------------------------------------------------
+function renderSatisfaction(p){
+  const card = document.getElementById("satisfactionCard");
+  const box = document.getElementById("satisfactionContent");
+  const clientEtape = effectiveEtape(p);
+  const isComplete = clientEtape >= 10;
+  const existing = testimonials.find(t=>t.clientId===p.id);
+
+  // Le client ne voit la carte que lorsque le parcours est terminé.
+  // L'admin/consultant la voit dès que le client a atteint l'étape 10, pour suivre les retours.
+  if(!isComplete){
+    if(currentUser.role === "client"){
+      card.style.display = "block";
+      box.innerHTML = `
+        <div class="satisfaction-locked">
+          <span class="lock-icon">🔒</span>
+          Ce questionnaire sera disponible une fois votre accompagnement terminé (étape 10/10).<br>
+          Vous êtes actuellement à l'étape ${clientEtape}/10.
+        </div>`;
+    } else {
+      card.style.display = "none";
+    }
+    return;
+  }
+
+  card.style.display = "block";
+
+  if(existing){
+    const stars = "★".repeat(existing.note||0) + "☆".repeat(5-(existing.note||0));
+    box.innerHTML = `
+      <div class="satisfaction-done">
+        <b>${existing.nomComplet}</b>${existing.entreprise ? ` — ${existing.entreprise}` : ""}
+        ${existing.note ? `<div class="stars">${stars}</div>` : ""}
+        <blockquote>« ${existing.temoignage} »</blockquote>
+        <span class="auth-badge ${existing.autorisation==="oui"?"auth-yes":"auth-no"}">
+          ${existing.autorisation==="oui" ? "Autorise la publication" : "N'autorise pas la publication"}
+        </span>
+        <div style="font-size:10.5px;color:var(--grey);margin-top:8px;">Reçu le ${formatDate(existing.date)}</div>
+      </div>`;
+    return;
+  }
+
+  if(currentUser.role !== "client"){
+    box.innerHTML = `<div class="empty">Le client a terminé son accompagnement mais n'a pas encore répondu au questionnaire.</div>`;
+    return;
+  }
+
+  let selectedNote = null;
+  box.innerHTML = `
+    <form id="satisfactionForm">
+      <div class="field">
+        <label>Nom complet *</label>
+        <input type="text" id="tsNomComplet" required>
+      </div>
+      <div class="field">
+        <label>Nom de l'entreprise</label>
+        <input type="text" id="tsEntreprise">
+      </div>
+      <div class="field">
+        <label>Secteur d'activité</label>
+        <input type="text" id="tsSecteur">
+      </div>
+      <div class="field">
+        <label>Ville</label>
+        <input type="text" id="tsVille">
+      </div>
+      <div class="field">
+        <label>Votre témoignage *</label>
+        <textarea id="tsTemoignage" required placeholder="Racontez votre expérience avec GSC Business Center..."></textarea>
+      </div>
+      <div class="field">
+        <label>Note globale (facultatif)</label>
+        <div class="note-scale" id="tsNoteScale">
+          ${[1,2,3,4,5].map(n=>`<button type="button" data-note="${n}">${n}</button>`).join("")}
+        </div>
+        <div class="note-scale-labels"><span>Pas satisfait</span><span>Très satisfait</span></div>
+      </div>
+      <div class="field">
+        <label>J'autorise GSC Business Center à publier ce témoignage sur son site et ses supports de communication *</label>
+        <div class="mode-toggle" id="tsAutorisationToggle">
+          <button type="button" data-val="oui">Oui</button>
+          <button type="button" data-val="non">Non</button>
+        </div>
+      </div>
+      <button type="submit" class="btn">Envoyer mon témoignage</button>
+      <div class="login-error" id="satisfactionError" style="display:none;">Merci de remplir les champs obligatoires et de répondre à l'autorisation de publication.</div>
+    </form>`;
+
+  const noteScale = document.getElementById("tsNoteScale");
+  noteScale.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      noteScale.querySelectorAll("button").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+      selectedNote = Number(b.dataset.note);
+    });
+  });
+  window._getSelectedNote = ()=>selectedNote;
+
+  const authToggle = document.getElementById("tsAutorisationToggle");
+  authToggle.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      authToggle.querySelectorAll("button").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+    });
+  });
+}
+
+function bindSatisfactionForm(){
+  document.getElementById("satisfactionContent").addEventListener("submit", async e=>{
+    if(e.target.id !== "satisfactionForm") return;
+    e.preventDefault();
+    const clientId = currentEspaceClientId();
+    const p = prospects.find(x=>x.id===clientId);
+    const errBox = document.getElementById("satisfactionError");
+    const authToggle = document.getElementById("tsAutorisationToggle");
+    const autorisationBtn = authToggle.querySelector(".sel");
+    const nomComplet = document.getElementById("tsNomComplet").value.trim();
+    const temoignage = document.getElementById("tsTemoignage").value.trim();
+
+    if(!nomComplet || !temoignage || !autorisationBtn){
+      errBox.style.display = "block";
+      return;
+    }
+    errBox.style.display = "none";
+
+    const newTestimonial = {
+      id: "t"+Date.now(),
+      clientId,
+      nomComplet,
+      entreprise: document.getElementById("tsEntreprise").value.trim(),
+      secteur: document.getElementById("tsSecteur").value.trim(),
+      ville: document.getElementById("tsVille").value.trim(),
+      temoignage,
+      note: window._getSelectedNote ? window._getSelectedNote() : null,
+      autorisation: autorisationBtn.dataset.val,
+      date: todayISO(),
+    };
+    testimonials.push(newTestimonial);
+    const ok = await persist();
+    renderSatisfaction(p);
+    if(ok) toast("Merci ! Votre témoignage a bien été envoyé.");
+    else toast("Témoignage enregistré localement — en attente de synchronisation");
+
+    // Si le client autorise la publication, on dépose aussi le témoignage sur
+    // le pont vers la page de vente, en attente de validation par l'admin.
+    if(newTestimonial.autorisation === "oui"){
+      pushTemoignageToBridge(newTestimonial).catch(err=>console.error("Pont Témoignages indisponible :", err));
+    }
+  });
+}
+
+// ---------------------------------------------------------------
+// Pont avec 01_Page_de_vente_GSC.html — dépôt et validation des témoignages
+// ---------------------------------------------------------------
+const temoignageBridgeConfigured = TEMOIGNAGE_BRIDGE_WEBAPP_URL.indexOf("REMPLACEZ") === -1;
+
+async function pushTemoignageToBridge(t){
+  if(!temoignageBridgeConfigured) return;
+  const res = await fetch(TEMOIGNAGE_BRIDGE_WEBAPP_URL, {
+    method:"POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action:"upsert", temoignage: t }),
+  });
+  if(!res.ok) throw new Error("Réponse HTTP " + res.status);
+  const data = await res.json();
+  if(data.status !== "ok") throw new Error(data.message || "Erreur backend inconnue");
+}
+
+async function fetchAllBridgeTemoignages(){
+  const res = await fetch(TEMOIGNAGE_BRIDGE_WEBAPP_URL + "?status=all", { method:"GET" });
+  if(!res.ok) throw new Error("Réponse HTTP " + res.status);
+  const data = await res.json();
+  if(data.status !== "ok") throw new Error(data.message || "Erreur backend inconnue");
+  return data.temoignages || [];
+}
+
+async function setTemoignageStatus(id, newStatus){
+  const res = await fetch(TEMOIGNAGE_BRIDGE_WEBAPP_URL, {
+    method:"POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action:"setStatus", id, newStatus }),
+  });
+  if(!res.ok) throw new Error("Réponse HTTP " + res.status);
+  const data = await res.json();
+  if(data.status !== "ok") throw new Error(data.message || "Erreur backend inconnue");
+}
+
+async function renderTemoignagesAdmin(){
+  const box = document.getElementById("temoignagesAdminList");
+  if(!box) return;
+
+  if(!temoignageBridgeConfigured){
+    box.innerHTML = `<div class="empty">Pont non configuré — voir GSC_Backend_Temoignages.gs pour l'activer.</div>`;
+    return;
+  }
+
+  box.innerHTML = `<div class="empty">Chargement…</div>`;
+  let list;
+  try{
+    list = await fetchAllBridgeTemoignages();
+  }catch(e){
+    box.innerHTML = `<div class="empty">Impossible de charger les témoignages (${e.message}).</div>`;
+    return;
+  }
+
+  if(list.length === 0){
+    box.innerHTML = `<div class="empty">Aucun témoignage pour le moment.</div>`;
+    return;
+  }
+
+  // En attente d'abord, puis les plus récents en tête.
+  list.sort((a,b)=>{
+    if(a.statutApprobation !== b.statutApprobation){
+      if(a.statutApprobation === "en_attente") return -1;
+      if(b.statutApprobation === "en_attente") return 1;
+    }
+    return new Date(b.date||0) - new Date(a.date||0);
+  });
+
+  box.innerHTML = list.map(t=>{
+    const stars = t.note ? "★".repeat(Number(t.note)) + "☆".repeat(5-Number(t.note)) : "";
+    const statusLabel = t.statutApprobation === "approuve" ? "Approuvé" : t.statutApprobation === "rejete" ? "Rejeté" : "En attente";
+    return `
+      <div class="temoignage-admin-card" data-id="${t.id}">
+        <b>${t.nomComplet}</b>${t.entreprise ? ` — ${t.entreprise}` : ""}
+        <span class="temoignage-status-badge temoignage-status-${t.statutApprobation}">${statusLabel}</span>
+        ${stars ? `<div class="stars" style="color:var(--gold);margin:4px 0;">${stars}</div>` : ""}
+        <blockquote style="font-style:italic;color:#20293a;font-size:13px;line-height:1.5;margin:8px 0;border-left:3px solid var(--gold);padding-left:12px;">« ${t.temoignage} »</blockquote>
+        <div style="font-size:10.5px;color:var(--grey);">${t.secteur||""}${t.secteur&&t.ville?" · ":""}${t.ville||""} — reçu le ${formatDate(t.date)}</div>
+        <div class="temoignage-admin-actions">
+          <button type="button" class="temoignage-approve-btn" data-action="approuve" ${t.statutApprobation==="approuve"?"disabled":""}>✓ Approuver</button>
+          <button type="button" class="temoignage-reject-btn" data-action="rejete" ${t.statutApprobation==="rejete"?"disabled":""}>✕ Rejeter</button>
+        </div>
+      </div>`;
+  }).join("");
+
+  box.querySelectorAll("[data-action]").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const card = btn.closest(".temoignage-admin-card");
+      const id = card.dataset.id;
+      const newStatus = btn.dataset.action;
+      btn.disabled = true;
+      try{
+        await setTemoignageStatus(id, newStatus);
+        toast(newStatus === "approuve" ? "Témoignage approuvé — visible sur le site" : "Témoignage rejeté");
+        renderTemoignagesAdmin();
+      }catch(e){
+        toast("Échec : " + e.message);
+        btn.disabled = false;
+      }
+    });
+  });
+}
+
+function bindLivrableForm(){
+  document.getElementById("livrableForm").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const clientId = currentEspaceClientId();
+    if(!clientId){ toast("Sélectionnez d'abord un client"); return; }
+    const etape = Number(document.getElementById("lEtape").value);
+    const who = document.getElementById("lWhoToggle").querySelector(".sel").dataset.who;
+    const fileInput = document.getElementById("lFile");
+    const file = fileInput.files[0];
+    if(!file){ toast("Choisissez un fichier"); return; }
+    if(file.size > 4*1024*1024){ toast("Fichier trop volumineux (max ~4 Mo)"); return; }
+
+    const { url, fileId } = await uploadLivrableFile(file);
+    const newLivrable = { id:"l"+Date.now(), clientId, etape, nom:file.name, who, date: todayISO(), dataUrl: url, fileId };
+    livrables.push(newLivrable);
+    const etapeChanged = syncClientEtape(clientId);
+    let ok = await persist({ entity:"livrable", op:"upsert", data:newLivrable });
+    if(etapeChanged){
+      const p = prospects.find(x=>x.id===clientId);
+      ok = (await persist({ entity:"client", op:"upsert", data:p })) && ok;
+    }
+    renderEspace();
+    e.target.reset();
+    document.getElementById("lFileLabel").textContent = "Toucher pour choisir un fichier (PDF, image, document…)";
+    document.getElementById("lFileLabel").classList.remove("has-file");
+    document.getElementById("lFileLabel").appendChild(fileInput);
+    if(ok) toast("Livrable déposé");
+  });
+}
+
+function fileToDataUrl(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ---------------------------------------------------------------
+// Équipe — gestion des comptes consultants (admin uniquement)
+// ---------------------------------------------------------------
+function renderTeam(){
+  if(!currentUser || currentUser.role !== "admin") return;
+  const list = document.getElementById("teamList");
+  if(!consultantAccounts.length){
+    list.innerHTML = `<div class="empty">Aucun compte consultant créé pour le moment.</div>`;
+    return;
+  }
+  list.innerHTML = consultantAccounts.map(c=>{
+    const nbClients = prospects.filter(p=>p.consultant===c.nom).length;
+    return `
+    <div class="team-row">
+      <div class="top">
+        <b>${c.nom}</b>
+        <span class="count">${nbClients} client${nbClients>1?"s":""} assigné${nbClients>1?"s":""}</span>
+      </div>
+      <div class="actions">
+        <input type="tel" placeholder="Téléphone (WhatsApp)" class="teamPhone" data-id="${c.id}" value="${c.telephone||""}">
+        <button type="button" class="btn-small" data-action="savePhone" data-id="${c.id}">Enregistrer</button>
+      </div>
+      <div class="actions">
+        <input type="url" placeholder="Lien Calendly personnel" class="teamCalendly" data-id="${c.id}" value="${c.calendlyUrl||""}">
+        <button type="button" class="btn-small" data-action="saveCalendly" data-id="${c.id}">Enregistrer</button>
+      </div>
+      <div class="actions">
+        <input type="password" placeholder="Nouveau mot de passe" class="teamPwd" data-id="${c.id}">
+        <button type="button" class="btn-small" data-action="reset" data-id="${c.id}">Réinitialiser</button>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn-small" data-action="sendWhatsApp" data-id="${c.id}">📱 Renvoyer les accès</button>
+        <button type="button" class="btn-small danger" data-action="delete" data-id="${c.id}">Supprimer</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  list.querySelectorAll("[data-action='savePhone']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const input = list.querySelector(`.teamPhone[data-id="${id}"]`);
+      const account = consultantAccounts.find(c=>c.id===id);
+      account.telephone = input.value.trim();
+      const ok = await persist({ entity:"consultant", op:"upsert", data:account });
+      if(ok) toast(`Téléphone mis à jour pour ${account.nom}`);
+    });
+  });
+
+  list.querySelectorAll("[data-action='saveCalendly']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const input = list.querySelector(`.teamCalendly[data-id="${id}"]`);
+      const account = consultantAccounts.find(c=>c.id===id);
+      account.calendlyUrl = input.value.trim();
+      const ok = await persist({ entity:"consultant", op:"upsert", data:account });
+      if(ok) toast(`Lien Calendly mis à jour pour ${account.nom}`);
+      renderSessionSelects();
+    });
+  });
+
+  list.querySelectorAll("[data-action='sendWhatsApp']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const account = consultantAccounts.find(c=>c.id===btn.dataset.id);
+      sendAccessByWhatsApp(account.telephone, account.nom, account.password, "consultant");
+    });
+  });
+
+  list.querySelectorAll("[data-action='reset']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const input = list.querySelector(`.teamPwd[data-id="${id}"]`);
+      const val = input.value.trim();
+      if(val.length < 4){ toast("Le mot de passe doit contenir au moins 4 caractères"); return; }
+      const account = consultantAccounts.find(c=>c.id===id);
+      account.password = val;
+      const ok = await persist({ entity:"consultant", op:"upsert", data:account });
+      if(ok) toast(`Mot de passe mis à jour pour ${account.nom}`);
+      renderTeam();
+    });
+  });
+
+  list.querySelectorAll("[data-action='delete']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const account = consultantAccounts.find(c=>c.id===id);
+      const nbClients = prospects.filter(p=>p.consultant===account.nom).length;
+      if(nbClients > 0){
+        toast(`Réattribuez d'abord les ${nbClients} client(s) de ${account.nom} avant de supprimer ce compte`);
+        return;
+      }
+      consultantAccounts = consultantAccounts.filter(c=>c.id!==id);
+      const ok = await persist({ entity:"consultant", op:"delete", data:id });
+      if(ok) toast(`Compte ${account.nom} supprimé`);
+      renderTeam();
+    });
+  });
+
+  renderConsultantEvolution();
+}
+
+// ---------------------------------------------------------------
+// Comptes clients (admin uniquement) — mot de passe + consultant assigné
+// ---------------------------------------------------------------
+let editingClientId = null;
+
+function renderClientAccounts(){
+  if(!currentUser || currentUser.role !== "admin") return;
+
+  const ccSel = document.getElementById("ccConsultant");
+  ccSel.innerHTML = `<option value="">Non assigné</option>` +
+    consultantAccounts.map(c=>`<option value="${c.nom}">${c.nom}</option>`).join("");
+
+  const list = document.getElementById("clientAccountsList");
+  if(!prospects.length){
+    list.innerHTML = `<div class="empty">Aucun client dans la base pour le moment.</div>`;
+    return;
+  }
+
+  const consultantOptions = (assigned)=>{
+    const opts = consultantAccounts.map(c=>
+      `<option value="${c.nom}" ${c.nom===assigned?"selected":""}>${c.nom}</option>`
+    ).join("");
+    return `<option value="" ${!assigned?"selected":""}>Non assigné</option>` + opts;
+  };
+
+  list.innerHTML = prospects.map(p=>{
+    const hasAccount = !!p.password;
+    const isEditing = editingClientId === p.id;
+    return `
+    <div class="team-row">
+      <div class="top">
+        <b>${p.nom}</b>
+        <span class="account-badge ${hasAccount?"account-active":"account-none"}">${hasAccount?"Compte actif":"Compte non créé"}</span>
+      </div>
+      <span class="count">${p.entreprise}</span>
+      <select class="clientConsultant" data-id="${p.id}">
+        ${consultantOptions(p.consultant)}
+      </select>
+      <div class="actions">
+        <input type="password" placeholder="${hasAccount?"Nouveau mot de passe":"Créer un mot de passe"}" class="clientPwd" data-id="${p.id}">
+        <button type="button" class="btn-small" data-action="setClientPwd" data-id="${p.id}">${hasAccount?"Réinitialiser":"Créer le compte"}</button>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn-small" data-action="editClient" data-id="${p.id}">${isEditing?"Fermer":"Modifier"}</button>
+        <button type="button" class="btn-small" data-action="sendClientWhatsApp" data-id="${p.id}" ${hasAccount?"":"disabled"}>📱 Renvoyer les accès</button>
+        <button type="button" class="btn-small danger" data-action="deleteClient" data-id="${p.id}">Supprimer</button>
+      </div>
+      ${isEditing ? `
+      <div class="edit-panel" data-editpanel="${p.id}">
+        <div class="field">
+          <label>Nom</label>
+          <input type="text" class="ecNom" data-id="${p.id}" value="${p.nom}">
+        </div>
+        <div class="field">
+          <label>Entreprise</label>
+          <input type="text" class="ecEntreprise" data-id="${p.id}" value="${p.entreprise}">
+        </div>
+        <div class="field">
+          <label>Secteur</label>
+          <input type="text" class="ecSecteur" data-id="${p.id}" value="${p.secteur||""}">
+        </div>
+        <div class="field">
+          <label>Téléphone (WhatsApp)</label>
+          <input type="tel" class="ecTelephone" data-id="${p.id}" value="${p.telephone||""}">
+        </div>
+        <div class="field">
+          <label>Mode d'accompagnement</label>
+          <select class="ecMode" data-id="${p.id}">
+            <option value="presentiel" ${p.mode==="presentiel"?"selected":""}>Présentiel</option>
+            <option value="distance" ${p.mode==="distance"?"selected":""}>À distance</option>
+            <option value="hybride" ${p.mode==="hybride"?"selected":""}>Hybride</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Étape GSC actuelle</label>
+          <select class="ecEtape" data-id="${p.id}">
+            ${ETAPES.map(e=>`<option value="${e.id}" ${p.etape===e.id?"selected":""}>Étape ${e.id} — ${e.nom}</option>`).join("")}
+          </select>
+        </div>
+        <div class="field">
+          <label>Statut</label>
+          <select class="ecStatut" data-id="${p.id}">
+            ${STATUTS.map(s=>`<option value="${s}" ${p.statut===s?"selected":""}>${s}</option>`).join("")}
+          </select>
+        </div>
+        <button type="button" class="btn" data-action="saveClient" data-id="${p.id}">Enregistrer les modifications</button>
+      </div>` : ""}
+    </div>`;
+  }).join("");
+
+  list.querySelectorAll(".clientConsultant").forEach(sel=>{
+    sel.addEventListener("change", async ()=>{
+      const p = prospects.find(x=>x.id===sel.dataset.id);
+      p.consultant = sel.value || null;
+      const ok = await persist({ entity:"client", op:"upsert", data:p });
+      if(ok) toast(`Consultant assigné : ${p.consultant || "aucun"} pour ${p.nom}`);
+      renderTeam();
+    });
+  });
+
+  list.querySelectorAll("[data-action='editClient']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      editingClientId = (editingClientId === btn.dataset.id) ? null : btn.dataset.id;
+      renderClientAccounts();
+    });
+  });
+
+  list.querySelectorAll("[data-action='sendClientWhatsApp']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const p = prospects.find(x=>x.id===btn.dataset.id);
+      if(!p.password){ toast("Créez d'abord le compte de ce client avant d'envoyer ses accès"); return; }
+      sendAccessByWhatsApp(p.telephone, p.nom, p.password, "client");
+    });
+  });
+
+  list.querySelectorAll("[data-action='saveClient']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const p = prospects.find(x=>x.id===id);
+      p.nom = list.querySelector(`.ecNom[data-id="${id}"]`).value.trim() || p.nom;
+      p.entreprise = list.querySelector(`.ecEntreprise[data-id="${id}"]`).value.trim() || p.entreprise;
+      p.secteur = list.querySelector(`.ecSecteur[data-id="${id}"]`).value.trim();
+      p.telephone = list.querySelector(`.ecTelephone[data-id="${id}"]`).value.trim();
+      p.mode = list.querySelector(`.ecMode[data-id="${id}"]`).value;
+      p.etape = Number(list.querySelector(`.ecEtape[data-id="${id}"]`).value);
+      p.statut = list.querySelector(`.ecStatut[data-id="${id}"]`).value;
+      const ok = await persist({ entity:"client", op:"upsert", data:p });
+      editingClientId = null;
+      renderClientAccounts();
+      renderSessionSelects(); renderSessions(); renderEspaceSelect(); renderEspace();
+      renderDashboard(); renderTeam();
+      if(ok) toast(`Fiche de ${p.nom} mise à jour`);
+    });
+  });
+
+  list.querySelectorAll("[data-action='deleteClient']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const p = prospects.find(x=>x.id===id);
+      if(!confirm(`Supprimer définitivement ${p.nom} (${p.entreprise}) ainsi que ses sessions et livrables ?`)) return;
+      const backup = { prospects: [...prospects], sessions: [...sessions], livrables: [...livrables] };
+      const clientSessions = sessions.filter(s=>s.clientId===id);
+      const clientLivrables = livrables.filter(l=>l.clientId===id);
+      prospects = prospects.filter(x=>x.id!==id);
+      sessions = sessions.filter(s=>s.clientId!==id);
+      livrables = livrables.filter(l=>l.clientId!==id);
+      if(editingClientId===id) editingClientId = null;
+
+      await persistLocalCache();
+      let ok = true;
+      if(espaceClientBackendConfigured){
+        try{
+          await apiDeleteClient(id);
+          for(const s of clientSessions) await apiDeleteSession(s.id);
+          for(const l of clientLivrables) await apiDeleteLivrable(l.id);
+        }catch(e){
+          console.error("Suppression backend incomplète :", e);
+          ok = false;
+        }
+      }
+      showSaveBanner(!ok);
+      if(!ok){
+        // Restaurer l'état local si la sauvegarde a échoué, pour ne jamais désynchroniser l'affichage des données réelles
+        prospects = backup.prospects; sessions = backup.sessions; livrables = backup.livrables;
+        await persistLocalCache();
+      }
+      renderClientAccounts();
+      renderSessionSelects(); renderSessions(); renderEspaceSelect(); renderEspace();
+      renderDashboard(); renderTeam();
+      if(ok) toast(`${p.nom} supprimé`);
+      else toast(`Échec de la suppression — voir bandeau en haut`);
+    });
+  });
+
+  list.querySelectorAll("[data-action='setClientPwd']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const input = list.querySelector(`.clientPwd[data-id="${id}"]`);
+      const val = input.value.trim();
+      if(val.length < 4){ toast("Le mot de passe doit contenir au moins 4 caractères"); return; }
+      const p = prospects.find(x=>x.id===id);
+      const wasNew = !p.password;
+      p.password = val;
+      const ok = await persist({ entity:"client", op:"upsert", data:p });
+      if(ok) toast(wasNew ? `Compte créé pour ${p.nom}` : `Mot de passe mis à jour pour ${p.nom}`);
+      else toast(`Mot de passe appliqué localement — en attente d'enregistrement`);
+      renderClientAccounts();
+    });
+  });
+}
+
+// ---------------------------------------------------------------
+// Évolution des portefeuilles par consultant (contrôle admin)
+// ---------------------------------------------------------------
+function renderConsultantEvolution(){
+  const box = document.getElementById("consultantEvolution");
+  if(!consultantAccounts.length){
+    box.innerHTML = `<div class="empty">Aucun consultant à suivre pour le moment.</div>`;
+    return;
+  }
+
+  box.innerHTML = consultantAccounts.map(c=>{
+    const mine = prospects.filter(p=>p.consultant===c.nom);
+    const nbClients = mine.length;
+    const avgEtape = nbClients ? (mine.reduce((s,p)=>s+effectiveEtape(p),0)/nbClients) : 0;
+    const actifs = mine.filter(p=>p.statut==="Client actif").length;
+    const myIds = mine.map(p=>p.id);
+    const upcoming = sessions.filter(s=>myIds.includes(s.clientId) && s.date>=todayISO()).length;
+    const enAttente = mine.filter(p=>effectiveEtape(p)<=2 && p.statut!=="Client actif").length;
+
+    const rows = [...mine].sort((a,b)=>effectiveEtape(a)-effectiveEtape(b)).map(p=>{
+      const clientEtape = effectiveEtape(p);
+      const pct = Math.round((clientEtape/10)*100);
+      return `
+      <div class="evo-client-row">
+        <div class="name">${p.nom}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <div class="step-lbl">Étape ${clientEtape}/10</div>
+        <span class="badge badge-${p.mode}">${MODE_LABEL[p.mode]}</span>
+      </div>`;
+    }).join("");
+
+    return `
+    <div class="evo-block">
+      <div class="evo-head" data-toggle="${c.id}">
+        <b>${c.nom} ${enAttente>0 ? `<span class="evo-alert">⚠ ${enAttente} à relancer</span>`:""}</b>
+        <span class="chev">▸</span>
+      </div>
+      <div class="evo-kpis">
+        <div class="k"><div class="n">${nbClients}</div><div class="l">Portefeuille</div></div>
+        <div class="k"><div class="n">${avgEtape.toFixed(1)}</div><div class="l">Étape moy.</div></div>
+        <div class="k"><div class="n">${actifs}</div><div class="l">Clients actifs</div></div>
+        <div class="k"><div class="n">${upcoming}</div><div class="l">Sessions à venir</div></div>
+      </div>
+      <div class="evo-detail" id="evoDetail-${c.id}">
+        ${rows || `<div class="empty" style="padding:10px 0;">Aucun client assigné.</div>`}
+      </div>
+    </div>`;
+  }).join("");
+
+  box.querySelectorAll("[data-toggle]").forEach(head=>{
+    head.addEventListener("click", ()=>{
+      const id = head.dataset.toggle;
+      const detail = document.getElementById("evoDetail-"+id);
+      const isOpen = detail.classList.toggle("open");
+      head.classList.toggle("open", isOpen);
+    });
+  });
+}
+
+function bindAdminPasswordForm(){
+  document.getElementById("adminPasswordForm").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const current = document.getElementById("apCurrent").value;
+    const next = document.getElementById("apNew").value;
+    const next2 = document.getElementById("apNew2").value;
+    const errBox = document.getElementById("adminPasswordError");
+
+    if(current !== adminPassword){
+      errBox.textContent = "Le mot de passe actuel est incorrect.";
+      errBox.style.display = "block";
+      return;
+    }
+    if(next !== next2){
+      errBox.textContent = "Les nouveaux mots de passe ne correspondent pas.";
+      errBox.style.display = "block";
+      return;
+    }
+    if(next.length < 4){
+      errBox.textContent = "Le nouveau mot de passe doit contenir au moins 4 caractères.";
+      errBox.style.display = "block";
+      return;
+    }
+    errBox.style.display = "none";
+
+    const previous = adminPassword;
+    adminPassword = next;
+    const ok = await persist({ entity:"adminPassword", op:"upsert", data:next });
+    if(!ok){
+      adminPassword = previous;
+      toast("Échec de l'enregistrement — mot de passe non modifié, réessayez");
+      return;
+    }
+    e.target.reset();
+    toast("Mot de passe administrateur mis à jour");
+  });
+}
+
+function bindTeamForm(){
+  document.getElementById("teamForm").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const nom = document.getElementById("tNom").value.trim();
+    const telephone = document.getElementById("tTelephone").value.trim();
+    const calendlyUrl = document.getElementById("tCalendly").value.trim();
+    const pass = document.getElementById("tPass").value;
+    const pass2 = document.getElementById("tPass2").value;
+    const errBox = document.getElementById("teamError");
+
+    if(pass !== pass2){
+      errBox.textContent = "Les mots de passe ne correspondent pas.";
+      errBox.style.display = "block";
+      return;
+    }
+    if(pass.length < 4){
+      errBox.textContent = "Le mot de passe doit contenir au moins 4 caractères.";
+      errBox.style.display = "block";
+      return;
+    }
+    if(consultantAccounts.some(c=>c.nom.toLowerCase()===nom.toLowerCase())){
+      errBox.textContent = "Un compte existe déjà pour ce nom.";
+      errBox.style.display = "block";
+      return;
+    }
+    errBox.style.display = "none";
+    const newConsultant = { id:"c"+Date.now(), nom, telephone, calendlyUrl, password: pass };
+    consultantAccounts.push(newConsultant);
+    const ok = await persist({ entity:"consultant", op:"upsert", data:newConsultant });
+    e.target.reset();
+    renderTeam();
+    if(ok){
+      toast(`Compte consultant créé pour ${nom}`);
+      if(telephone) sendAccessByWhatsApp(telephone, nom, pass, "consultant");
+    } else {
+      toast(`${nom} ajouté — en attente d'enregistrement (voir bandeau en haut)`);
+    }
+  });
+}
+
+function bindClientCreateForm(){
+  let selectedMode = "presentiel";
+  const toggle = document.getElementById("ccModeToggle");
+  toggle.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      toggle.querySelectorAll("button").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+      selectedMode = b.dataset.mode;
+    });
+  });
+
+  document.getElementById("clientCreateForm").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const nom = document.getElementById("ccNom").value.trim();
+    const entreprise = document.getElementById("ccEntreprise").value.trim();
+    const secteur = document.getElementById("ccSecteur").value.trim();
+    const telephone = document.getElementById("ccTelephone").value.trim();
+    const consultant = document.getElementById("ccConsultant").value || null;
+    const pass = document.getElementById("ccPass").value;
+    const pass2 = document.getElementById("ccPass2").value;
+    const errBox = document.getElementById("clientCreateError");
+
+    if(pass !== pass2){
+      errBox.textContent = "Les mots de passe ne correspondent pas.";
+      errBox.style.display = "block";
+      return;
+    }
+    if(pass.length < 4){
+      errBox.textContent = "Le mot de passe doit contenir au moins 4 caractères.";
+      errBox.style.display = "block";
+      return;
+    }
+    if(prospects.some(p=>p.nom.toLowerCase()===nom.toLowerCase())){
+      errBox.textContent = "Un compte existe déjà pour ce nom.";
+      errBox.style.display = "block";
+      return;
+    }
+    errBox.style.display = "none";
+
+    const newId = "p"+Date.now();
+    const newClient = {
+      id:newId, nom, entreprise, secteur: secteur || "À définir",
+      mode: selectedMode, etape:1, statut:"En discussion", telephone,
+      prochaineAction:"Premier rendez-vous à planifier",
+      consultant, password: pass
+    };
+    prospects.push(newClient);
+    const ok = await persist({ entity:"client", op:"upsert", data:newClient });
+    e.target.reset();
+    toggle.querySelectorAll("button").forEach(x=>x.classList.remove("sel"));
+    toggle.querySelector('[data-mode="presentiel"]').classList.add("sel");
+    selectedMode = "presentiel";
+
+    renderSessionSelects(); renderEspaceSelect();
+    renderTeam(); renderClientAccounts();
+    if(ok){
+      toast(`Compte client créé pour ${nom}`);
+      if(telephone) sendAccessByWhatsApp(telephone, nom, pass, "client");
+    } else {
+      toast(`${nom} ajouté — en attente d'enregistrement (voir bandeau en haut)`);
+    }
+  });
+}
+
+// ---------------------------------------------------------------
+// Formulaire session
+// ---------------------------------------------------------------
+function bindForms(){
+  document.getElementById("sessionForm").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const mode = window._getSelectedMode ? window._getSelectedMode() : "presentiel";
+    const date = document.getElementById("sDate").value;
+    if(!date){ toast("Merci d'indiquer une date"); return; }
+
+    const isEdit = !!editingSessionId;
+    const sessionData = {
+      id: isEdit ? editingSessionId : "s"+Date.now(),
+      clientId: document.getElementById("sClient").value,
+      mode,
+      lieu: document.getElementById("sLieu").value,
+      lien: document.getElementById("sLien").value,
+      etape: Number(document.getElementById("sEtape").value),
+      date,
+      heure: document.getElementById("sHeure").value || "",
+    };
+
+    if(isEdit){
+      const idx = sessions.findIndex(x=>x.id===editingSessionId);
+      if(idx !== -1) sessions[idx] = sessionData;
+    } else {
+      sessions.push(sessionData);
+    }
+
+    const etapeChanged = syncClientEtape(sessionData.clientId);
+    let ok = await persist({ entity:"session", op:"upsert", data:sessionData });
+    if(etapeChanged){
+      const p = prospects.find(x=>x.id===sessionData.clientId);
+      ok = (await persist({ entity:"client", op:"upsert", data:p })) && ok;
+    }
+
+    const wasEdit = isEdit;
+    cancelEditSession(); // réinitialise aussi le formulaire et le bouton
+    renderSessions(); renderDashboard();
+    if(ok) toast(wasEdit ? "Session modifiée" : "Session planifiée");
+    else toast(wasEdit ? "Modification appliquée localement — en attente d'enregistrement" : "Session ajoutée — en attente d'enregistrement (voir bandeau en haut)");
+  });
+
+  document.getElementById("sCancelEditBtn").addEventListener("click", cancelEditSession);
+}
+
+init();
+</script>
+</body>
+</html>
